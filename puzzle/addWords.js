@@ -2,28 +2,41 @@ import { generateGrid } from "./generateGrid.js";
 import { arrayGenerator } from "./letterArraySize.js";
 import { words } from "./wordData.js"; 
   
-const letterArray = arrayGenerator(7);   
+const letterArray = arrayGenerator(7);
+
+const rowSize = 7;
 
 function addWord(word) {
 
-   let position = 0;
+   let position = -1;
 
+   // Find an available position where the word can fit
     for (let i = 0; i < letterArray.length; i++) {
-
         if (letterArray[i] === " ") {
+            
+            // First constraint: Ensure enough space in the array
+            if (i + word.length > letterArray.length) {
+                console.error(`Not enough space to add "${word}"`);
+                return;
+            }
 
-            position = i;
-            break;
+            // Second constraint: Ensure word does not wrap across rows
+            let rowStart = Math.floor(i / rowSize) * rowSize;
+            let rowEnd = rowStart + rowSize;
 
+            if (i + word.length <= rowEnd) {
+                position = i;
+                break;
+            }
         }
     }
-       
-    // Ensure the word fits within the remaining space
-    if (position + word.length > letterArray.length) {
-        console.error(`Not enough space to add "${word}"`);
+
+    // If no valid position was found, return
+    if (position === -1) {
+        console.error(`Cannot place "${word}" without wrapping`);
         return;
     }
-
+       
      // Place the word in the next available slots
     word.split("").forEach((letter, i) => {
             letterArray[position + i] = letter; 
@@ -36,10 +49,5 @@ function addWord(word) {
 }
 
 
-addWord(words[0]); // Add the first word to the grid
-addWord(words[1]); // Add the second word to the grid
-addWord(words[2]); // Add the third word to the grid 
-addWord(words[3]); // Add the fourth word to the grid
-addWord(words[4]); // Add the fifth word to the grid
 
 console.log(letterArray); // Log the updated letter array

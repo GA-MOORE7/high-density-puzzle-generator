@@ -1,1 +1,1 @@
-export const words = ["apple", "banana", "cherry", "grape", "orange"];
+export const words = ["apple", "banana", "cherry", "grape", "orange", "melon", "tangerine", "dog"];
