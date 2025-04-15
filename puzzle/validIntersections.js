@@ -15,6 +15,8 @@ export function validIntersections(word, gridObjects, rowSize) {
         const startY = intersectY - i;
         if (startY >= 0 && startY + word.length <= rowSize) {
           let isValid = true;
+          let intersects = false;
+
           for (let j = 0; j < word.length; j++) {
             const targetY = startY + j;
             const match = gridObjects.find(c => c.x === intersectX && c.y === targetY);
@@ -22,8 +24,26 @@ export function validIntersections(word, gridObjects, rowSize) {
               isValid = false;
               break;
             }
+            if (match.letter === word[j]) intersects = true;
+
+            // Check adjacent cells
+            const left = gridObjects.find(c => c.x === intersectX - 1 && c.y === targetY);
+            const right = gridObjects.find(c => c.x === intersectX + 1 && c.y === targetY);
+            if ((left && left.letter) || (right && right.letter)) {
+              if (!match.letter) {
+                isValid = false;
+                break;
+              }
+            }
           }
-          if (isValid) {
+
+          // Check start/end boundaries
+          const before = gridObjects.find(c => c.x === intersectX && c.y === startY -1);
+          const after = gridObjects.find(c => c.x === intersectX && c.y === startY + word.length);
+          if ((before && before.letter) || (after && after.letter)) isValid = false;
+
+
+          if (isValid && intersects) {
             validPlacements.push({
               word,
               vertical: true,
@@ -38,6 +58,8 @@ export function validIntersections(word, gridObjects, rowSize) {
         const startX = intersectX - i;
         if (startX >= 0 && startX + word.length <= rowSize) {
           let isValid = true;
+          let intersects = false;
+
           for (let j = 0; j < word.length; j++) {
             const targetX = startX + j;
             const match = gridObjects.find(c => c.x === targetX && c.y === intersectY);
@@ -45,8 +67,25 @@ export function validIntersections(word, gridObjects, rowSize) {
               isValid = false;
               break;
             }
+            if (match.letter === word[j]) intersects = true;
+
+            // Check adjacent cells
+            const above = gridObjects.find(c => c.x === targetX && c.y === intersectY -1);
+            const below = gridObjects.find(c => c.x === targetX && c.y === intersectY + 1);
+            if ((above && above.letter) || (below && below.letter)) {
+              if (!match.letter) {
+                isValid = false;
+                break;
+              }
+            }
           }
-          if (isValid) {
+        
+          // Check start/end boundaries
+          const before = gridObjects.find(c => c.x === startX -1 && c.y === intersectY);
+          const after = gridObjects.find(c => c.x === startX + word.length && c.y === intersectY);
+          if ((before && before.letter) || (after && after.letter)) isValid = false;
+
+          if (isValid && intersects) {	
             validPlacements.push({
               word,
               vertical: false,
@@ -61,4 +100,5 @@ export function validIntersections(word, gridObjects, rowSize) {
   }
 
   return validPlacements;
+
 }
