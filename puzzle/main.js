@@ -34,6 +34,7 @@ for (let pass = 0; pass < maxPasses; pass++) {
     }
 }
 
+// Step 3: Fill empty cells with letters
 generateGrid(letterArray);
 console.log(getGridAsObjects(letterArray, rowSize))
 
