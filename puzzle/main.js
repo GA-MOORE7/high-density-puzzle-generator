@@ -6,49 +6,42 @@ import { getGridAsObjects } from "./letterPositions.js";
 import { validIntersections } from "./validIntersections.js";
 import { placeWordAtPosition } from "./addWord.js";
 
-const rowSize = 7;
+const rowSize = 12;
 const letterArray = arrayGenerator(rowSize);
-generateGrid(letterArray);
+
+// Step 1: Place the initial word
 placeInitialWord(letterArray, rowSize, words[0], true, false);
 
-const gridObjects = getGridAsObjects(letterArray, rowSize);
-const validSpots = validIntersections(words[1], gridObjects, rowSize);
-const chosenSpot = validSpots[0];
-placeWordAtPosition(words[1], letterArray, rowSize, chosenSpot);
+// Step 2: Try to place remaining words up to 10 times, but only once per word
+const maxPasses = 100;
+const placedWords = new Set();
+placedWords.add(words[0]); // Mark the first word as placed
 
-const gridObjects_2 = getGridAsObjects(letterArray, rowSize);
-const validSpots_2 = validIntersections(words[2], gridObjects_2, rowSize);
-const chosenSpot_2 = validSpots_2[0];
-placeWordAtPosition(words[2], letterArray, rowSize, chosenSpot_2);
+for (let pass = 0; pass < maxPasses; pass++) {
+    for (let i = 1; i < words.length; i++) {
+        const word = words[i];
+        if (placedWords.has(word)) continue; // Skip if already placed
 
-const gridObjects_3 = getGridAsObjects(letterArray, rowSize);
-const validSpots_3 = validIntersections(words[3], gridObjects_3, rowSize);
-const chosenSpot_3 = validSpots_3[0];
-placeWordAtPosition(words[3], letterArray, rowSize, chosenSpot_3);
+         const gridObjects = getGridAsObjects(letterArray, rowSize);
+         const validSpots = validIntersections(word, gridObjects, rowSize);
 
-const gridObjects_4 = getGridAsObjects(letterArray, rowSize);
-const validSpots_4 = validIntersections(words[4], gridObjects_4, rowSize);
-const chosenSpot_4 = validSpots_4[0];
-placeWordAtPosition(words[4], letterArray, rowSize, chosenSpot_4);
+         if (validSpots.length > 0) {
 
-// const gridObjects_5 = getGridAsObjects(letterArray, rowSize);
-// const validSpots_5 = validIntersections(words[5], gridObjects_5, rowSize);
-// const chosenSpot_5 = validSpots_5[0];
-// placeWordAtPosition(words[5], letterArray, rowSize, chosenSpot_5);
-
-// const gridObjects_6 = getGridAsObjects(letterArray, rowSize);
-// const validSpots_6 = validIntersections(words[6], gridObjects_6, rowSize);
-// const chosenSpot_6 = validSpots_6[0];
-// placeWordAtPosition(words[6], letterArray, rowSize, chosenSpot_6);
-
-// const gridObjects_7 = getGridAsObjects(letterArray, rowSize);
-// const validSpots_7 = validIntersections(words[7], gridObjects_7, rowSize);
-// const chosenSpot_7 = validSpots_7[0];
-// placeWordAtPosition(words[7], letterArray, rowSize, chosenSpot_7);
-
-
-
+            const chosenSpot = validSpots[0];
+            placeWordAtPosition(word, letterArray, rowSize, chosenSpot);
+            placedWords.add(word);
+         }
+    }
+}
 
 generateGrid(letterArray);
-const updatedGridObjects = getGridAsObjects(letterArray, rowSize);
-console.log(updatedGridObjects);
+console.log(getGridAsObjects(letterArray, rowSize))
+
+// Step 4: Calculate and display grid density
+const totalCells = rowSize * rowSize;
+const filledCells = letterArray.flat().filter(cell => cell.letter && cell.letter !== "").length;
+const density = (filledCells / totalCells).toFixed(2);
+console.log(`Filled cells: ${filledCells} / ${totalCells}`);
+console.log(`Grid density: ${density}`);
+
+
