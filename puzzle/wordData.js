@@ -1,12 +1,14 @@
 export const wordList = [
-    "apple", "banana", "cherry", "grape", "orange", "melon", "mango", "lemon",
-    "kiwi", "peach", "pear", "plum", "fig", "date", "apricot", "blueberry",
-    "cantaloupe", "papaya", "pineapple", "watermelon", "raspberry", "blackberry",
-    "cranberry", "guava", "pomegranate", "lychee", "starfruit", "dragonfruit",
-    "passionfruit", "tangerine", "nectarine", "coconut", "lime", "boysenberry",
-    "persimmon", "currant", "gooseberry", "quince", "jackfruit", "durian",
-    "mulberry", "longan", "soursop", "rambutan", "blood orange",
-    "jabuticaba", "miracle fruit"
+  "cat", "dog", "sun", "hat", "pen",       // 3 letters
+  "frog", "milk", "star", "book", "jump",  // 4 letters
+  "plant", "grape", "chair", "cloud", "train", // 5 letters
+  "banana", "pencil", "rocket", "flower", "sneeze", // 6 letters
+  "teacher", "diamond", "blanket", "monster", "freight", // 7 letters
+  "map", "red", "fan", "box", "owl",        // 3 letters
+  "tree", "lamp", "fish", "game", "ball",   // 4 letters
+  "apple", "mouse", "tiger", "beach", "brush", // 5 letters
+  "window", "guitar", "bottle", "saddle", "basket", // 6 letters
+  "picture", "journey", "present", "harmony", "library" // 7 letters
   ];
   
   function sortByBest(words) {
