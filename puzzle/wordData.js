@@ -1,14 +1,32 @@
 export const wordList = [
-  "cat", "dog", "sun", "hat", "pen",       // 3 letters
-  "frog", "milk", "star", "book", "jump",  // 4 letters
-  "plant", "grape", "chair", "cloud", "train", // 5 letters
-  "banana", "pencil", "rocket", "flower", "sneeze", // 6 letters
-  "teacher", "diamond", "blanket", "monster", "freight", // 7 letters
-  "map", "red", "fan", "box", "owl",        // 3 letters
-  "tree", "lamp", "fish", "game", "ball",   // 4 letters
-  "apple", "mouse", "tiger", "beach", "brush", // 5 letters
-  "window", "guitar", "bottle", "saddle", "basket", // 6 letters
-  "picture", "journey", "present", "harmony", "library" // 7 letters
+  "hamster",
+  "rabbit",
+  "fish",
+  "cat",
+  "duck",
+  "dog",
+  "like",
+  "home",
+  "look",
+  "what",
+  "really",
+  "sad",
+  "ready",
+  "angry",
+  "sad",
+  "thirsty",
+  "tired",
+  "hungry",
+  "sleepy",
+  "water",
+  "want",
+  "need",
+  "happy",
+  "mad",
+  "excited",
+  "bored",
+  "scared"
+
   ];
   
   function sortByBest(words) {
