@@ -6,7 +6,6 @@ import { getGridAsObjects } from "./letterPositions.js";
 import { validIntersections } from "./validIntersections.js";
 import { placeWordAtPosition } from "./addWord.js";
 import { enableLetterSwapping } from "../scrabblegram/clickLetterSwap.js";
-import { colorMatchingLetters } from "../scrabblegram/colorMatchingLetters.js";
 
 
 const rowSize = 7;
@@ -74,7 +73,7 @@ console.log(`Grid density: ${best.density.toFixed(2)}`);
 // Optionally display best grid
 generateGrid(best.grid);
 enableLetterSwapping();
-colorMatchingLetters();
+
 
 
 
