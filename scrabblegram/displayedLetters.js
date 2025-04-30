@@ -36,13 +36,13 @@ export function getDisplayedLetterCountsFromGrid() {
                 const expectedCount = expectedData ? expectedData.count : 0;
 
                 displayedCounts[word][letter] = {
-                    count: 0,
+                    actualLetterCount: 0,
                     expectedLetterCount: expectedCount, // ✅ Add expected count
                     actualGridItems: []
                 };
             }
 
-            displayedCounts[word][letter].count += 1;
+            displayedCounts[word][letter].actualLetterCount += 1;
             displayedCounts[word][letter].actualGridItems.push(item);
         });
     });

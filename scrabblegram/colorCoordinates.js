@@ -1,12 +1,14 @@
 import { getDisplayedLetterCountsFromGrid } from './displayedLetters.js';
+import { markExcessNonIntersectingItems } from './addExcessLetterFlag.js';
 
 export function colorCoordinates() {
     const displayedLetters = getDisplayedLetterCountsFromGrid();
 
+    // Step 1: Mark excess letters
+    markExcessNonIntersectingItems();
+
     for (const word in displayedLetters) {
         const wordData = displayedLetters[word];
-
-        // To track misplaced letters
         const wordLetters = word.split('');
 
         for (const letter in wordData) {
@@ -14,31 +16,40 @@ export function colorCoordinates() {
             const { actualGridItems } = letterData;
 
             actualGridItems.forEach(item => {
-                // Get the displayed letter (from textContent of the grid item)
                 const displayedLetter = item.textContent.trim().toLowerCase();
-
-                // Extract the letter from the id attribute using a regular expression
                 const letterFromId = (item.id.match(/letter-([a-z])/i) || [])[1]?.toLowerCase();
 
-               
-
-                // Check if the displayed letter matches the correct letter in the word (correct position)
-                if (displayedLetter === letterFromId) {
-                    item.style.backgroundColor = '#90EE90'; // Green for correct letter in correct position
+                // ✅ Remove excess flag if letter now matches expected
+                if (displayedLetter === letterFromId && item.classList.contains('excess-flag')) {
+                    item.classList.remove('excess-flag');
                 }
-                // Check if the displayed letter is in the word but in the wrong position (misplaced)
-                else if (wordLetters.includes(displayedLetter)) {
-                    item.style.backgroundColor = '#FFEB3B'; // Yellow for misplaced letter
+
+                const hasExcessFlag = item.classList.contains('excess-flag');
+
+                // 🔄 Merge letters from main word and intersecting word (if any)
+                const intersectsWithMatch = item.id.match(/intersectsWith-([a-z]+)/i);
+                const intersectingWord = intersectsWithMatch ? intersectsWithMatch[1].toLowerCase() : '';
+                const allWordLetters = new Set([...wordLetters, ...intersectingWord.split('')]);
+
+                // 🎨 Apply color logic
+                if (hasExcessFlag) {
+                    item.style.backgroundColor = 'red'; // ❌ Excess letter
+                } else if (displayedLetter === letterFromId) {
+                    item.style.backgroundColor = '#90EE90'; // ✅ Correct position
+                } else if (allWordLetters.has(displayedLetter)) {
+                    item.style.backgroundColor = '#FFEB3B'; // 🟫 Misplaced
                 } else {
-                    item.style.backgroundColor = 'red'; // White for incorrect letter
+                    item.style.backgroundColor = 'red'; // ❌ Wrong letter
                 }
             });
         }
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Your colorCoordinates function will now run only after the DOM is ready
-    colorCoordinates();
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//     colorCoordinates();
+// });
+
+
+
 

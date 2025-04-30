@@ -1,8 +1,17 @@
 import { getDisplayedLetterCountsFromGrid } from "./displayedLetters.js";
 import { getExpectedLetterCountsFromGrid } from './expectedLetterCount.js';
 import { colorCoordinates } from "./colorCoordinates.js";
+import { wordsWithExcess } from "./wordsWithExcess.js";
+import { filterMismatchedGridItems } from "./filterMissmatchedGridItems.js";
+import { markExcessNonIntersectingItems }   from "./addExcessLetterFlag.js";
+import { scrambleGridLetters } from "./puzzleScramble.js";
 
 let selectedGridItem = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+    scrambleGridLetters();
+    colorCoordinates();
+});
 
 export function enableLetterSwapping() {
     const gridItems = document.querySelectorAll('.grid-item');
@@ -27,9 +36,11 @@ export function enableLetterSwapping() {
                 console.log(expectedLetters); // For debugging purposes
                 const displayedLetters = getDisplayedLetterCountsFromGrid();
                 console.log(displayedLetters); // For debugging purposes
-                
-                colorCoordinates(); // Update colors based on new letters
-            
+                // Update colors based on new letters
+                wordsWithExcess();
+                filterMismatchedGridItems();
+                markExcessNonIntersectingItems();
+                colorCoordinates(); 
 
                 // Clear border and reset selection
                 selectedGridItem.style.border = '';
