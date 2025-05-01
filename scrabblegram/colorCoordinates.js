@@ -19,25 +19,26 @@ export function colorCoordinates() {
                 const displayedLetter = item.textContent.trim().toLowerCase();
                 const letterFromId = (item.id.match(/letter-([a-z])/i) || [])[1]?.toLowerCase();
 
-                // ✅ Remove excess flag if letter now matches expected
-                if (displayedLetter === letterFromId && item.classList.contains('excess-flag')) {
-                    item.classList.remove('excess-flag');
-                }
+                // ✅ Skip if this item doesn't belong to the current word
+                const wordMatch = item.id.match(/word-([a-zA-Z]+)/);
+                const wordFromId = wordMatch ? wordMatch[1].toLowerCase() : '';
+                if (wordFromId !== word) return;
 
                 const hasExcessFlag = item.classList.contains('excess-flag');
 
-                // 🔄 Merge letters from main word and intersecting word (if any)
+                // 🔄 Get intersecting word letters (if any)
                 const intersectsWithMatch = item.id.match(/intersectsWith-([a-z]+)/i);
                 const intersectingWord = intersectsWithMatch ? intersectsWithMatch[1].toLowerCase() : '';
-                const allWordLetters = new Set([...wordLetters, ...intersectingWord.split('')]);
+                const intersectingLetters = intersectingWord.split('');
+                const allRelevantLetters = new Set([...wordLetters, ...intersectingLetters]);
 
                 // 🎨 Apply color logic
                 if (hasExcessFlag) {
                     item.style.backgroundColor = 'red'; // ❌ Excess letter
                 } else if (displayedLetter === letterFromId) {
                     item.style.backgroundColor = '#90EE90'; // ✅ Correct position
-                } else if (allWordLetters.has(displayedLetter)) {
-                    item.style.backgroundColor = '#FFEB3B'; // 🟫 Misplaced
+                } else if (allRelevantLetters.has(displayedLetter)) {
+                    item.style.backgroundColor = '#FFEB3B'; // 🟫 Misplaced letter
                 } else {
                     item.style.backgroundColor = 'red'; // ❌ Wrong letter
                 }
@@ -45,6 +46,7 @@ export function colorCoordinates() {
         }
     }
 }
+
 
 // document.addEventListener('DOMContentLoaded', () => {
 //     colorCoordinates();
