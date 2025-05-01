@@ -10,10 +10,11 @@ export function getGridAsObjects(letterArray, rowSize) {
           y,
           letter: cellData.letter ?? null,
           word: cellData.word ?? null,
-          vertical: cellData.vertical ?? null
+          vertical: cellData.vertical ?? null,
+          intersectsWith: cellData.intersectsWith ?? null  // 👈 Add this line
         };
       } else {
-        return { x, y, letter: null, word: null, vertical: null };
+        return { x, y, letter: null, word: null, vertical: null, intersectsWith: null };
       }
     });
   }
