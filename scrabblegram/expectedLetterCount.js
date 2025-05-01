@@ -35,9 +35,6 @@ export function getExpectedLetterCountsFromGrid() {
     return letterCounts;
 }
 
-// // ✅ WAIT for DOM ready before calling
-// document.addEventListener('DOMContentLoaded', () => {
-//     getExpectedLetterCountsFromGrid(); // 💬 call the function
-// });
+
 
 

@@ -48,9 +48,7 @@ export function colorCoordinates() {
 }
 
 
-// document.addEventListener('DOMContentLoaded', () => {
-//     colorCoordinates();
-// });
+
 
 
 

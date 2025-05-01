@@ -52,7 +52,6 @@ export function wordsWithExcess() {
         });
     });
 
-    //console.log(excessDetails); // Log the final excess details
     return excessDetails;
 }
 

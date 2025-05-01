@@ -59,7 +59,6 @@ export function scrambleGridLetters() {
         itemB.textContent = temp;
     }
 
-    //console.log("Scrambling complete (no empty cell involvement).");
 }
 
 
