@@ -1,52 +1,63 @@
 export const wordList = [
-  "weigh",
-  "younger",
-  "older",
-  "shorter",
-  "lighter",
-  "heavier",
-  "hundred",
-  "brother",
-  "little",
-  "big",
-  "sister",
-  "middle",
-  "mad",
-  "years",
-  "tall",
-  "at"
+ "walk",
+ "hug",
+ "climb",
+ "jump",
+ "swim",
+ "hop",
+ "crawl",
+ "fly",
+ "can",
+ "onion",
+ "bean",
+ "potato",
+ "carrot",
+ "tomato",
+ "they",
+ "soup",
+ "yummy",
+ "drive",
+ "cook",
+ "music",
+ "play"
   ];
+
+  // Newly coded sortByBest function using Map object:
   
   function sortByBest(words) {
 
-    // Flatten all the characters into a single array
+    if (words.length === 0) return [];
+
+    // Step 1: Create an array of characters
     const allChars = words.join('').split('');
-    const allCharsCount = allChars.length;
+   
+    // Step 2: Get the total amount of letters
+    const totalChars = allChars.length; 
+  
+    // Step 3: Create a map objects for the letter counts
+    const frequency = new Map(); 
 
-    // Calculate the frequency of each character
-    const frequency = {};
+    // Step 4: Set the char and its corresponding count
     for (const char of allChars) {
-
-      frequency[char] = (frequency[char] || 0) + 1;
-
+      frequency.set(char, (frequency.get(char) || 0) + 1);
     }
-    for (const char in frequency) {
-
-      frequency[char] /= allCharsCount;
-
+  
+    // Step 5: Set the char and its relative frequency
+    for (const [char, count] of frequency.entries()) {
+      frequency.set(char, count / totalChars)
     }
 
-    // Rate a word by summing frequencies of its characters
+    // Step 6: Helper function to rate each word based on its letters' relative frequencies 
     function rateWord(word) {
-
-      return [...word].reduce((sum, char) => sum + (frequency[char] || 0), 0);
+      return [...word].reduce((sum, char) => sum + (frequency.get(char) || 0), 0);
     }
-
-    // Sort words by their rating in descending order
-    return [...words].sort((a, b) => rateWord(b)- rateWord(a));
+  
+    // Step 7: Rank the words in the array based on their letters' relative frequencies
+    return [...words].sort((a, b) => rateWord(b) - rateWord(a));
+   
 
   }
-
+  
   export const words = sortByBest(wordList);
 
 

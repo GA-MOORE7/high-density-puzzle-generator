@@ -32,6 +32,9 @@ export function markExcessNonIntersectingItems() {
                 const wordFromId = idMatch ? idMatch[1].toLowerCase() : '';
                 if (wordFromId !== word) continue;
 
+                // ✅ Skip already flagged items (e.g., flagged by intersecting word)
+                if (item.classList.contains("excess-flag")) continue;
+
                 if (flagged >= excessCount) break;
 
                 const intersectMatch = item.id.match(/intersectsWith-([a-zA-Z]+)/);
@@ -53,7 +56,7 @@ export function markExcessNonIntersectingItems() {
                     }
                 }
 
-                if (markAsExcess) {
+                if (markAsExcess && !item.classList.contains("excess-flag")) {
                     item.classList.add("excess-flag");
                     flagged++;
                 }
