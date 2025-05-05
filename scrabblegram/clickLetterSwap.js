@@ -1,5 +1,3 @@
-import { getDisplayedLetterCountsFromGrid } from "./displayedLetters.js";
-import { getExpectedLetterCountsFromGrid } from './expectedLetterCount.js';
 import { colorCoordinates } from "./colorCoordinates.js";
 import { wordsWithExcess } from "./wordsWithExcess.js";
 import { filterMismatchedGridItems } from "./filterMissmatchedGridItems.js";
@@ -33,12 +31,6 @@ export function enableLetterSwapping() {
                 const temp = selectedGridItem.textContent;
                 selectedGridItem.textContent = item.textContent;
                 item.textContent = temp;
-
-                // Update logic
-                // const expectedLetters = getExpectedLetterCountsFromGrid();
-                // console.log(expectedLetters);
-                // const displayedLetters = getDisplayedLetterCountsFromGrid();
-                // console.log(displayedLetters);
 
                 const wordsWithexcess = wordsWithExcess();
                 console.log("Words with excess:", wordsWithexcess);
