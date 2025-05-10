@@ -1,28 +1,8 @@
 export const wordList = [
- "walk",
- "hug",
- "climb",
- "jump",
- "swim",
- "hop",
- "crawl",
- "fly",
- "can",
- "onion",
- "bean",
- "potato",
- "carrot",
- "tomato",
- "they",
- "soup",
- "yummy",
- "drive",
- "cook",
- "music",
- "play"
+"apple", "banana", "cherry", "grape", "orange", "melon", "mango", "lemon"
   ];
 
-  // Newly coded sortByBest function using Map object:
+  // Newly coded sortByBest function using Map object (Coding Practice):
   
   function sortByBest(words) {
 
@@ -55,7 +35,6 @@ export const wordList = [
     // Step 7: Rank the words in the array based on their letters' relative frequencies
     return [...words].sort((a, b) => rateWord(b) - rateWord(a));
    
-
   }
   
   export const words = sortByBest(wordList);

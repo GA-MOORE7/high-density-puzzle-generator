@@ -7,17 +7,17 @@ export function markExcessNonIntersectingItems() {
     });
 
     const excessDetails = filterMismatchedGridItems();
+    const globallyFlaggedItems = new Set(); // 🔐 Avoid double-flagging across words
 
     for (const word in excessDetails) {
         const letters = excessDetails[word];
 
         for (const letterKey in letters) {
             const { actualGridItems, actualLetterCount, expectedLetterCount } = letters[letterKey];
-
             const excessCount = actualLetterCount - expectedLetterCount;
             if (excessCount <= 0) continue;
 
-            // Clone and sort items to prioritize non-intersecting first
+            // Sort to prioritize non-intersecting first
             const sortedItems = [...actualGridItems].sort((a, b) => {
                 const aIntersects = a.item.id.includes("intersectsWith-") && !a.item.id.includes("intersectsWith-none");
                 const bIntersects = b.item.id.includes("intersectsWith-") && !b.item.id.includes("intersectsWith-none");
@@ -27,13 +27,13 @@ export function markExcessNonIntersectingItems() {
             let flagged = 0;
 
             for (const { item } of sortedItems) {
-                // ✅ Skip if this item doesn't belong to the current word
+                // ✅ Skip if not from current word
                 const idMatch = item.id.match(/word-([a-zA-Z]+)/);
                 const wordFromId = idMatch ? idMatch[1].toLowerCase() : '';
                 if (wordFromId !== word) continue;
 
-                // ✅ Skip already flagged items (e.g., flagged by intersecting word)
-                if (item.classList.contains("excess-flag")) continue;
+                // ✅ Skip if already globally flagged
+                if (globallyFlaggedItems.has(item)) continue;
 
                 if (flagged >= excessCount) break;
 
@@ -56,14 +56,20 @@ export function markExcessNonIntersectingItems() {
                     }
                 }
 
-                if (markAsExcess && !item.classList.contains("excess-flag")) {
+                if (markAsExcess) {
                     item.classList.add("excess-flag");
+                    globallyFlaggedItems.add(item); // 💡 Mark this item globally
                     flagged++;
                 }
             }
         }
     }
 }
+
+
+
+
+
 
 
 
