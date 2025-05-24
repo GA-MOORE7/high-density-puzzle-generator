@@ -3,6 +3,7 @@ import { getDisplayedLetterMap } from './displayedLetter.js';
 import { getExpectedLetterMap } from './expectedLetter.js';
 import { getPrimaryWordMap } from './primaryWord.js';
 import { getInCorrectWordMap } from './inCorrectWord.js';
+import { addDisplayedLetterCount } from './displayedLetterCount.js';
 import { mergeMaps } from './mergeMaps.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -11,7 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
     getDisplayedLetterMap(),
     getExpectedLetterMap(), 
     getPrimaryWordMap(),
-    getInCorrectWordMap()
+    getInCorrectWordMap(),
+    addDisplayedLetterCount(),
   );
   console.log("Initial grid state:", initialMap);
 });
@@ -40,9 +42,10 @@ export function enableLetterSwapping() {
                 const expectedLetterMap = getExpectedLetterMap();
                 const primaryWordMap = getPrimaryWordMap();
                 const inCorrectWordMap = getInCorrectWordMap();
+                const displayedLetterCount = addDisplayedLetterCount();
 
-                const combinedMap = mergeMaps(correctLetterMap, displayedLetterMap, expectedLetterMap, primaryWordMap, inCorrectWordMap);
-
+                const combinedMap = mergeMaps(correctLetterMap, displayedLetterMap, expectedLetterMap, primaryWordMap, inCorrectWordMap, displayedLetterCount);
+                console.clear();
                 console.log("Updated grid state:", combinedMap);
 
                 selectedGridItem.classList.remove('selected');
