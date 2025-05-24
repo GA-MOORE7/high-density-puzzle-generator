@@ -66,7 +66,7 @@ results.sort((a, b) => b.density - a.density);
 // Log the top grid
 const best = results[0];
 console.log(`🏆 Best Grid (Run #${best.run}):`);
-console.log(best.grid);
+//console.log(best.grid);
 console.log(`Filled cells: ${best.filledCells} / ${totalCells}`);
 console.log(`Grid density: ${best.density.toFixed(2)}`);
 

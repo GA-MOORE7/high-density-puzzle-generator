@@ -1,76 +1,60 @@
-import { colorCoordinates } from "./colorCoordinates.js";
-import { wordsWithExcess } from "./wordsWithExcess.js";
-import { filterMismatchedGridItems } from "./filterMissmatchedGridItems.js";
-import { markExcessNonIntersectingItems } from "./addExcessLetterFlag.js";
-import { scrambleGridLetters } from "./puzzleScramble.js";
-
-let selectedGridItem = null;
+import { getCorrectLetterMap } from './correctLetter.js';
+import { getDisplayedLetterMap } from './displayedLetter.js';
+import { getExpectedLetterMap } from './expectedLetter.js';
+import { getPrimaryWordMap } from './primaryWord.js';
+import { getInCorrectWordMap } from './inCorrectWord.js';
+import { mergeMaps } from './mergeMaps.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    scrambleGridLetters();
-    colorCoordinates();
-    lockCorrectlyPlacedLetters(); // 🔒 Lock correct cells after coloring
+  const initialMap = mergeMaps(
+    getCorrectLetterMap(),
+    getDisplayedLetterMap(),
+    getExpectedLetterMap(), 
+    getPrimaryWordMap(),
+    getInCorrectWordMap()
+  );
+  console.log("Initial grid state:", initialMap);
 });
+
 
 export function enableLetterSwapping() {
     const gridItems = document.querySelectorAll('.grid-item');
+    let selectedGridItem = null;
 
     gridItems.forEach(item => {
         item.addEventListener('click', () => {
-            if (item.classList.contains('locked')) return; // 🔒 Skip locked cells
-
+          
             const content = item.textContent.trim();
             if (!content) return;
 
             if (!selectedGridItem) {
-                // First letter selected
                 selectedGridItem = item;
-                item.style.border = '1px solid blue';
+                item.classList.add('selected'); // Add a CSS class instead of direct styling
             } else if (selectedGridItem !== item) {
-                // Second letter selected
-                const temp = selectedGridItem.textContent;
-                selectedGridItem.textContent = item.textContent;
+                const temp = selectedGridItem.textContent.trim();
+                selectedGridItem.textContent = item.textContent.trim();
                 item.textContent = temp;
 
-                const wordsWithexcess = wordsWithExcess();
-                console.log("Words with excess:", wordsWithexcess);
-                const mismatchedGridItems = filterMismatchedGridItems();
-                console.log("Mismatched grid items:", mismatchedGridItems);
-                markExcessNonIntersectingItems();
-                colorCoordinates();
-                lockCorrectlyPlacedLetters(); // 🔒 Re-lock after swap
+                const correctLetterMap = getCorrectLetterMap();
+                const displayedLetterMap = getDisplayedLetterMap();
+                const expectedLetterMap = getExpectedLetterMap();
+                const primaryWordMap = getPrimaryWordMap();
+                const inCorrectWordMap = getInCorrectWordMap();
 
-                // Clear border and reset selection
-                selectedGridItem.style.border = '';
+                const combinedMap = mergeMaps(correctLetterMap, displayedLetterMap, expectedLetterMap, primaryWordMap, inCorrectWordMap);
+
+                console.log("Updated grid state:", combinedMap);
+
+                selectedGridItem.classList.remove('selected');
                 selectedGridItem = null;
             } else {
-                // Clicked the same cell again - deselect
-                selectedGridItem.style.border = '';
+                selectedGridItem.classList.remove('selected');
                 selectedGridItem = null;
             }
         });
     });
 }
 
-// 🔒 Lock correctly placed grid items
-function lockCorrectlyPlacedLetters() {
-    const gridItems = document.querySelectorAll('.grid-item');
-    gridItems.forEach(item => {
-        const displayedLetter = item.textContent.trim().toLowerCase();
-        const match = item.id.match(/letter-([a-z])/i);
-        const expectedLetter = match ? match[1].toLowerCase() : null;
-
-        if (displayedLetter && displayedLetter === expectedLetter) {
-            item.classList.add('locked');
-            item.style.pointerEvents = 'none';
-            item.style.opacity = '0.7';
-        } else {
-            item.classList.remove('locked');
-            item.style.pointerEvents = 'auto';
-            item.style.opacity = '1';
-        }
-    });
-}
 
 
 
