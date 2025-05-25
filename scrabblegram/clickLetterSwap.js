@@ -5,7 +5,9 @@ import { getPrimaryWordMap } from './primaryWord.js';
 import { getInCorrectWordMap } from './inCorrectWord.js';
 import { addDisplayedLetterCount } from './displayedLetterCount.js';
 import { addExpectedLetterCount } from './expectedLetterCount.js';
-import { addExcessLetterCount } from './excessLetterCount.js';  // ✅ NEW import
+import { addExcessLetterCount } from './excessLetterCount.js';  
+import { categorizeGridItems } from './categorizeGridItems.js';
+import { addIntersectionFlagFromDOM } from './intersectsBoolean.js';
 import { mergeMaps } from './mergeMaps.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -17,9 +19,15 @@ document.addEventListener('DOMContentLoaded', () => {
     getInCorrectWordMap(),
     addDisplayedLetterCount(),
     addExpectedLetterCount(),
-    addExcessLetterCount()  // ✅ NEW integrated here
+    addExcessLetterCount(),  
+    addIntersectionFlagFromDOM()
   );
+
   console.log("Initial grid state:", initialMap);
+
+  // Generate and log categories from the initial map
+  const initialCategories = categorizeGridItems(initialMap);
+  console.log("Initial grid categories:", initialCategories);
 });
 
 export function enableLetterSwapping() {
@@ -35,10 +43,12 @@ export function enableLetterSwapping() {
         selectedGridItem = item;
         item.classList.add('selected');
       } else if (selectedGridItem !== item) {
+        // Swap letters
         const temp = selectedGridItem.textContent.trim();
         selectedGridItem.textContent = item.textContent.trim();
         item.textContent = temp;
 
+        // Rebuild all maps after swap
         const correctLetterMap = getCorrectLetterMap();
         const displayedLetterMap = getDisplayedLetterMap();
         const expectedLetterMap = getExpectedLetterMap();
@@ -46,7 +56,8 @@ export function enableLetterSwapping() {
         const inCorrectWordMap = getInCorrectWordMap();
         const displayedLetterCount = addDisplayedLetterCount();
         const expectedLetterCount = addExpectedLetterCount();
-        const excessLetterCount = addExcessLetterCount();  // ✅ NEW integrated here
+        const excessLetterCount = addExcessLetterCount();
+        const intersectionMap = addIntersectionFlagFromDOM();
 
         const combinedMap = mergeMaps(
           correctLetterMap,
@@ -56,21 +67,28 @@ export function enableLetterSwapping() {
           inCorrectWordMap,
           displayedLetterCount,
           expectedLetterCount,
-          excessLetterCount  // ✅ NEW merged here
+          excessLetterCount,  
+          intersectionMap
         );
 
         console.clear();
         console.log("Updated grid state:", combinedMap);
 
+        // Categorize updated grid
+        const categories = categorizeGridItems(combinedMap);
+        console.log("Grid categories:", categories);
+
         selectedGridItem.classList.remove('selected');
         selectedGridItem = null;
       } else {
+        // Clicked same item twice -> deselect
         selectedGridItem.classList.remove('selected');
         selectedGridItem = null;
       }
     });
   });
 }
+
 
 
 
