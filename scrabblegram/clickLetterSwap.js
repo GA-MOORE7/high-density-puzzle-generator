@@ -8,6 +8,7 @@ import { addExpectedLetterCount } from './expectedLetterCount.js';
 import { addExcessLetterCount } from './excessLetterCount.js';  
 import { categorizeGridItems } from './categorizeGridItems.js';
 import { addIntersectionFlagFromDOM } from './intersectsBoolean.js';
+import { applyCategoryClasses } from './applyCategoryClasses.js';
 import { mergeMaps } from './mergeMaps.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -25,9 +26,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   console.log("Initial grid state:", initialMap);
 
-  // Generate and log categories from the initial map
   const initialCategories = categorizeGridItems(initialMap);
   console.log("Initial grid categories:", initialCategories);
+
+  // ✅ Apply categories visually
+  applyCategoryClasses(initialMap, initialCategories);
 });
 
 export function enableLetterSwapping() {
@@ -49,34 +52,25 @@ export function enableLetterSwapping() {
         item.textContent = temp;
 
         // Rebuild all maps after swap
-        const correctLetterMap = getCorrectLetterMap();
-        const displayedLetterMap = getDisplayedLetterMap();
-        const expectedLetterMap = getExpectedLetterMap();
-        const primaryWordMap = getPrimaryWordMap();
-        const inCorrectWordMap = getInCorrectWordMap();
-        const displayedLetterCount = addDisplayedLetterCount();
-        const expectedLetterCount = addExpectedLetterCount();
-        const excessLetterCount = addExcessLetterCount();
-        const intersectionMap = addIntersectionFlagFromDOM();
-
         const combinedMap = mergeMaps(
-          correctLetterMap,
-          displayedLetterMap,
-          expectedLetterMap,
-          primaryWordMap,
-          inCorrectWordMap,
-          displayedLetterCount,
-          expectedLetterCount,
-          excessLetterCount,  
-          intersectionMap
+          getCorrectLetterMap(),
+          getDisplayedLetterMap(),
+          getExpectedLetterMap(),
+          getPrimaryWordMap(),
+          getInCorrectWordMap(),
+          addDisplayedLetterCount(),
+          addExpectedLetterCount(),
+          addExcessLetterCount(),
+          addIntersectionFlagFromDOM()
         );
 
         console.clear();
         console.log("Updated grid state:", combinedMap);
 
-        // Categorize updated grid
+        // Categorize and style updated grid
         const categories = categorizeGridItems(combinedMap);
         console.log("Grid categories:", categories);
+        applyCategoryClasses(combinedMap, categories); // ✅ apply styling
 
         selectedGridItem.classList.remove('selected');
         selectedGridItem = null;
@@ -88,7 +82,6 @@ export function enableLetterSwapping() {
     });
   });
 }
-
 
 
 
