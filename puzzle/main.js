@@ -46,11 +46,18 @@ for (let run = 0; run < attempts; run++) {
     }
   }
 
-  const filledCells = letterArray.flat().filter(cell => cell.letter && cell.letter !== "").length;
+  const filledCells = letterArray.flat().filter(cell => {
+    // Cell can be string or object, so normalize before checking letter
+    if (typeof cell === 'object' && cell !== null) return cell.letter && cell.letter !== "";
+    return false;
+  }).length;
   const density = filledCells / totalCells;
 
+  // Normalize entire grid here before pushing results
+  const normalizedGrid = getGridAsObjects(letterArray, rowSize);
+
   results.push({
-    grid: JSON.parse(JSON.stringify(letterArray)), // Deep copy to preserve this run
+    grid: normalizedGrid,  // Fully normalized grid of cell objects
     filledCells,
     density,
     run
@@ -66,13 +73,18 @@ results.sort((a, b) => b.density - a.density);
 // Log the top grid
 const best = results[0];
 console.log(`🏆 Best Grid (Run #${best.run}):`);
-//console.log(best.grid);
+console.log(best.grid); // Each cell is a normalized object with consistent properties
 console.log(`Filled cells: ${best.filledCells} / ${totalCells}`);
 console.log(`Grid density: ${best.density.toFixed(2)}`);
 
 // Optionally display best grid
 generateGrid(best.grid);
+
 enableLetterSwapping();
+
+
+
+
 
 
 
