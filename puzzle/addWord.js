@@ -21,22 +21,27 @@ export function placeWordAtPosition(word, letterArray, rowSize, position) {
         existing.intersectsWith.push(word);
       }
 
-      // Preserve the existing letter, update intersectsWith
+      // Preserve the existing letter, update intersectsWith and position
       letterArray[index] = {
         ...existing,
         intersectsWith: existing.intersectsWith,
+        x: targetX,
+        y: targetY
       };
     } else {
-      // Fresh placement
+      // Fresh placement with x and y
       letterArray[index] = {
         letter,
         word,
         vertical,
         intersectsWith: null,
+        x: targetX,
+        y: targetY
       };
     }
   }
 }
+
 
 
 

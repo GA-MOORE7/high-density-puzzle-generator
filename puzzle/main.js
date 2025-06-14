@@ -6,6 +6,8 @@ import { getGridAsObjects } from "./letterPositions.js";
 import { validIntersections } from "./validIntersections.js";
 import { placeWordAtPosition } from "./addWord.js";
 import { enableLetterSwapping } from "../scrabblegram/clickLetterSwap.js";
+import { createWordsObjectFromGrid } from "../scrabblegram/wordsObject.js";
+
 
 
 const rowSize = 7;
@@ -79,6 +81,8 @@ console.log(`Grid density: ${best.density.toFixed(2)}`);
 
 // Optionally display best grid
 generateGrid(best.grid);
+const wordsObject = createWordsObjectFromGrid(best.grid);
+console.log("📚 Words Object:", wordsObject);
 
 enableLetterSwapping();
 
