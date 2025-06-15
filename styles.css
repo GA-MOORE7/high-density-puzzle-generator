@@ -16,3 +16,23 @@
     font-size: 20px;
     font-weight: bold;
 }
+
+.correct-green {
+  background-color: rgb(141, 201, 141);
+  color: white;
+}
+
+.wrong-word-red {
+  background-color: red;
+  color: white;
+}
+
+.misplaced-yellow {
+  background-color: goldenrod;
+  color: black;
+}
+
+.potential-excess {
+  background-color: lightgray;
+  color: black;
+}

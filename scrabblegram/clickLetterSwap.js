@@ -1,76 +1,103 @@
-import { colorCoordinates } from "./colorCoordinates.js";
-import { wordsWithExcess } from "./wordsWithExcess.js";
-import { filterMismatchedGridItems } from "./filterMissmatchedGridItems.js";
-import { markExcessNonIntersectingItems } from "./addExcessLetterFlag.js";
-import { scrambleGridLetters } from "./puzzleScramble.js";
+import { assignTempColors } from "./assignTempColors.js";
+import { mergeColors } from "./mergeColors.js";  // import your merging function
 
-let selectedGridItem = null;
+export function enableLetterSwapping(puzzleGrid, wordsObject) {
+  const gridItems = document.querySelectorAll('.grid-item');
+  let selectedGridItem = null;
 
-document.addEventListener('DOMContentLoaded', () => {
-    scrambleGridLetters();
-    colorCoordinates();
-    lockCorrectlyPlacedLetters(); // 🔒 Lock correct cells after coloring
-});
+  function parseCoords(id) {
+    const parts = id.split(' ');
+    const x = parseInt(parts[0].split('-')[1], 10);
+    const y = parseInt(parts[1].split('-')[1], 10);
+    return { x, y };
+  }
 
-export function enableLetterSwapping() {
-    const gridItems = document.querySelectorAll('.grid-item');
+function updateCellColors() {
+  gridItems.forEach(item => {
+    const { x, y } = parseCoords(item.id);
+    const cell = puzzleGrid.find(c => c.x === x && c.y === y);
 
-    gridItems.forEach(item => {
-        item.addEventListener('click', () => {
-            if (item.classList.contains('locked')) return; // 🔒 Skip locked cells
+    if (!cell || !cell.displayedLetter) {
+      // No letter displayed: set to gray (empty)
+      item.style.backgroundColor = '#d0e7ff';  // or '#ccc', whichever you prefer
+      item.textContent = ''; // Clear text to be sure
+      return;
+    }
 
-            const content = item.textContent.trim();
-            if (!content) return;
+    // Find all words including this cell
+    const colors = [];
 
-            if (!selectedGridItem) {
-                // First letter selected
-                selectedGridItem = item;
-                item.style.border = '1px solid blue';
-            } else if (selectedGridItem !== item) {
-                // Second letter selected
-                const temp = selectedGridItem.textContent;
-                selectedGridItem.textContent = item.textContent;
-                item.textContent = temp;
+    for (const wordId in wordsObject) {
+      const wordEntry = wordsObject[wordId];
+      const index = wordEntry.cells.findIndex(c => c.x === x && c.y === y);
+      if (index !== -1 && wordEntry.tempColors) {
+        colors.push(wordEntry.tempColors[index]);
+      }
+    }
 
-                const wordsWithexcess = wordsWithExcess();
-                console.log("Words with excess:", wordsWithexcess);
-                const mismatchedGridItems = filterMismatchedGridItems();
-                console.log("Mismatched grid items:", mismatchedGridItems);
-                markExcessNonIntersectingItems();
-                colorCoordinates();
-                lockCorrectlyPlacedLetters(); // 🔒 Re-lock after swap
+    let finalColor = null; // default no color
+    if (colors.length > 0) {
+      finalColor = colors.reduce((acc, color) => mergeColors(acc, color));
+    }
 
-                // Clear border and reset selection
-                selectedGridItem.style.border = '';
-                selectedGridItem = null;
-            } else {
-                // Clicked the same cell again - deselect
-                selectedGridItem.style.border = '';
-                selectedGridItem = null;
-            }
-        });
-    });
+    item.style.backgroundColor = finalColor === 'green' ? '#6aaa64' :
+                                finalColor === 'brown' ? '#c9b458' :
+                                finalColor === 'red' ? '#d9534f' :
+                                '#eee';  // fallback gray for no color
+  });
 }
 
-// 🔒 Lock correctly placed grid items
-function lockCorrectlyPlacedLetters() {
-    const gridItems = document.querySelectorAll('.grid-item');
-    gridItems.forEach(item => {
-        const displayedLetter = item.textContent.trim().toLowerCase();
-        const match = item.id.match(/letter-([a-z])/i);
-        const expectedLetter = match ? match[1].toLowerCase() : null;
 
-        if (displayedLetter && displayedLetter === expectedLetter) {
-            item.classList.add('locked');
-            item.style.pointerEvents = 'none';
-            item.style.opacity = '0.7';
-        } else {
-            item.classList.remove('locked');
-            item.style.pointerEvents = 'auto';
-            item.style.opacity = '1';
+  gridItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const content = item.textContent.trim();
+      if (!content) return;
+
+      if (!selectedGridItem) {
+        selectedGridItem = item;
+        item.classList.add('selected');
+      } else if (selectedGridItem !== item) {
+        const { x: x1, y: y1 } = parseCoords(selectedGridItem.id);
+        const { x: x2, y: y2 } = parseCoords(item.id);
+
+        const cell1 = puzzleGrid.find(c => c.x === x1 && c.y === y1);
+        const cell2 = puzzleGrid.find(c => c.x === x2 && c.y === y2);
+
+        if (!cell1 || !cell2) {
+          console.warn("Grid cell not found for swapping.");
+          selectedGridItem.classList.remove('selected');
+          selectedGridItem = null;
+          return;
         }
+
+        // Swap displayedLetter
+        const tempLetter = cell1.displayedLetter;
+        cell1.displayedLetter = cell2.displayedLetter;
+        cell2.displayedLetter = tempLetter;
+
+        // Update UI text
+        selectedGridItem.textContent = cell1.displayedLetter || '';
+        item.textContent = cell2.displayedLetter || '';
+
+        // Recalculate tempColors for all words
+        assignTempColors(wordsObject, puzzleGrid);
+
+        // Update UI colors for all cells
+        updateCellColors();
+
+        selectedGridItem.classList.remove('selected');
+        selectedGridItem = null;
+      } else {
+        selectedGridItem.classList.remove('selected');
+        selectedGridItem = null;
+      }
     });
+  });
+
+  // Initial coloring when enabling swapping
+  updateCellColors();
 }
+
 
 
 

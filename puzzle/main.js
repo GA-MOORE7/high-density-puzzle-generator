@@ -6,17 +6,18 @@ import { getGridAsObjects } from "./letterPositions.js";
 import { validIntersections } from "./validIntersections.js";
 import { placeWordAtPosition } from "./addWord.js";
 import { enableLetterSwapping } from "../scrabblegram/clickLetterSwap.js";
-
+import { createWordsObjectFromGrid } from "../scrabblegram/wordsObject.js";
+import { assignTempColors } from "../scrabblegram/assignTempColors.js";
+import { scrambleDisplayedLetters } from "../scrabblegram/scrambleDisplayedLetters.js"; // <-- Import scramble function
 
 const rowSize = 7;
 const attempts = 1000;
 const totalCells = rowSize * rowSize;
 const results = [];
 
-let initialWordIndex = 0; // Start with the first word in the array
+let initialWordIndex = 0;
 
 for (let run = 0; run < attempts; run++) {
-  // Ensure the initial word increments by 1 each time
   const initialWord = words[initialWordIndex];
   
   const letterArray = arrayGenerator(rowSize);
@@ -46,33 +47,56 @@ for (let run = 0; run < attempts; run++) {
     }
   }
 
-  const filledCells = letterArray.flat().filter(cell => cell.letter && cell.letter !== "").length;
+  const filledCells = letterArray.flat().filter(cell => {
+    if (typeof cell === 'object' && cell !== null) return cell.letter && cell.letter !== "";
+    return false;
+  }).length;
   const density = filledCells / totalCells;
 
+  const normalizedGrid = getGridAsObjects(letterArray, rowSize);
+
+  normalizedGrid.forEach(cell => {
+    if (cell.letter) {
+      cell.displayedLetter = cell.letter;
+    } else {
+      cell.displayedLetter = null;
+    }
+  });
+
   results.push({
-    grid: JSON.parse(JSON.stringify(letterArray)), // Deep copy to preserve this run
+    grid: normalizedGrid,
     filledCells,
     density,
     run
   });
 
-  // Increment the initial word index to the next word for the next run
-  initialWordIndex = (initialWordIndex + 1) % words.length; // Wrap around if it exceeds the array length
+  initialWordIndex = (initialWordIndex + 1) % words.length;
 }
 
-// Sort by highest density
 results.sort((a, b) => b.density - a.density);
 
-// Log the top grid
 const best = results[0];
 console.log(`🏆 Best Grid (Run #${best.run}):`);
 console.log(best.grid);
 console.log(`Filled cells: ${best.filledCells} / ${totalCells}`);
 console.log(`Grid density: ${best.density.toFixed(2)}`);
 
-// Optionally display best grid
+// <-- SCRAMBLE displayed letters before generating grid UI
+scrambleDisplayedLetters(best.grid);
+
 generateGrid(best.grid);
-enableLetterSwapping();
+
+const wordsObject = createWordsObjectFromGrid(best.grid);
+assignTempColors(wordsObject, best.grid);
+
+console.log("📚 Words Object with tempColors:", wordsObject);
+
+enableLetterSwapping(best.grid, wordsObject);
+
+
+
+
+
 
 
 
