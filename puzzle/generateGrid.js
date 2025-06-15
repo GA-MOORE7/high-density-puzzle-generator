@@ -26,9 +26,10 @@ export function generateGrid(array) {
         word ? `word-${word}` : null,
         vertical !== null ? `vertical-${vertical}` : null,
         intersectsWith ? `intersectsWith-${intersectsWith}` : null
-      ].filter(Boolean); // remove null/undefined
+      ].filter(Boolean);
 
-      cell.textContent = letter;
+      // Use displayedLetter here for the UI display:
+      cell.textContent = cellData.displayedLetter || "";
       cell.id = idParts.join(" ");
     } else {
       cell.textContent = "";
@@ -38,6 +39,7 @@ export function generateGrid(array) {
     gridContainer.appendChild(cell);
   });
 }
+
 
   
 

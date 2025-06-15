@@ -7,14 +7,15 @@ import { validIntersections } from "./validIntersections.js";
 import { placeWordAtPosition } from "./addWord.js";
 import { enableLetterSwapping } from "../scrabblegram/clickLetterSwap.js";
 import { createWordsObjectFromGrid } from "../scrabblegram/wordsObject.js";
-import { assignTempColors } from "../scrabblegram/assignTempColors.js";  // <-- Added import
+import { assignTempColors } from "../scrabblegram/assignTempColors.js";
+import { scrambleDisplayedLetters } from "../scrabblegram/scrambleDisplayedLetters.js"; // <-- Import scramble function
 
 const rowSize = 7;
 const attempts = 1000;
 const totalCells = rowSize * rowSize;
 const results = [];
 
-let initialWordIndex = 0; // Start with the first word in the array
+let initialWordIndex = 0;
 
 for (let run = 0; run < attempts; run++) {
   const initialWord = words[initialWordIndex];
@@ -52,13 +53,11 @@ for (let run = 0; run < attempts; run++) {
   }).length;
   const density = filledCells / totalCells;
 
-  // Normalize entire grid here
   const normalizedGrid = getGridAsObjects(letterArray, rowSize);
 
-  // ✅ Add displayedLetter property (can scramble later if needed)
   normalizedGrid.forEach(cell => {
     if (cell.letter) {
-      cell.displayedLetter = cell.letter; // You can scramble this later
+      cell.displayedLetter = cell.letter;
     } else {
       cell.displayedLetter = null;
     }
@@ -82,10 +81,13 @@ console.log(best.grid);
 console.log(`Filled cells: ${best.filledCells} / ${totalCells}`);
 console.log(`Grid density: ${best.density.toFixed(2)}`);
 
+// <-- SCRAMBLE displayed letters before generating grid UI
+scrambleDisplayedLetters(best.grid);
+
 generateGrid(best.grid);
 
 const wordsObject = createWordsObjectFromGrid(best.grid);
-assignTempColors(wordsObject, best.grid);   // <-- Added this call
+assignTempColors(wordsObject, best.grid);
 
 console.log("📚 Words Object with tempColors:", wordsObject);
 
