@@ -49,8 +49,8 @@ export function createWordsObjectFromGrid(puzzleGrid) {
     const startX = wordCells[0].x;
     const startY = wordCells[0].y;
 
-    // Step 7: Compose the target word from letters
-    const targetWord = wordCells.map(c => c.letter).join("");
+    // Step 7: Compose the target word from expectedLetters
+    const targetWord = wordCells.map(c => c.expectedLetter).join("");
 
     // Step 8: Count each letter for validation or game logic
     const letterCountMap = {};
@@ -80,7 +80,5 @@ export function createWordsObjectFromGrid(puzzleGrid) {
 
   return wordsObject;
 }
-
-
 
 
