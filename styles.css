@@ -1,22 +1,56 @@
-.grid-container {
-    display: grid;
-    gap: 10px;
-    width: fit-content; 
-    margin: auto;
-    border: 2px solid black;
-    padding: 10px;
-}
-.grid-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: lightblue;
-    border: 1px solid #000;
-    padding: 20px;
-    font-size: 20px;
-    font-weight: bold;
+/* Flex container to hold grid + table side by side */
+.side-by-side-container {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 20px auto;           /* Centers container horizontally */
+  max-width: 1200px;           /* Controls total width */
+  padding: 0 20px;             /* Optional: ensures breathing room on smaller screens */
 }
 
+
+/* Left panel: Puzzle preview */
+.left-panel {
+  flex: 1;
+  min-width: 350px;
+}
+
+/* Right panel: Puzzle summary table */
+.right-panel {
+  flex: 1;
+  min-width: 350px;
+}
+
+.left-panel h1,
+.right-panel h1 {
+  text-align: center;
+}
+
+
+/* Grid styling */
+.grid-container {
+  display: grid;
+  gap: 10px;
+  width: fit-content;
+  margin: auto;
+  border: 2px solid black;
+  padding: 10px;
+}
+
+.grid-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: lightblue;
+  border: 1px solid #000;
+  padding: 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Coloring classes for game logic */
 .correct-green {
   background-color: rgb(141, 201, 141);
   color: white;
@@ -35,4 +69,22 @@
 .potential-excess {
   background-color: lightgray;
   color: black;
+}
+
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+  word-break: break-word;
+}
+
+th {
+  background-color: #f4f4f4;
 }

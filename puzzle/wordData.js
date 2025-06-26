@@ -1,9 +1,13 @@
 export const wordList = [
-  "apple", "banana", "cherry", "grape", "orange", "melon", "mango", "lemon",
-  "guava", "kiwi", "plum", "fig", "pear", "berry", "papaya", "lime", "date",
-  "lychee", "apricot", "olive", "raisin", "tomato", "coconut", "durian",
-  "citron", "prune", "logan", "salak", "satsuma", "tangelo"
+  "harp", "drum", "play", "music", "want",
+  "car", "bus", "take", "broom", "go",
+  "will", "clown", "angel", "ghost", "piano",
+  "train", "truck", "viola", "flute", "wagon",
+  "skate", "ride", "bike", "walk", "run",
+  "stop", "fast", "slow", "jump", "grab"
 ];
+
+
 
 
   // Newly coded sortByBest function using Map object (Coding Practice):

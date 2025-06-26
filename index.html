@@ -12,10 +12,34 @@
     <script type="module" src="puzzle/addWord.js" defer></script>
     <script type="module" src="puzzle/main.js" defer></script>
     <script type="module" src="scrabblegram/clickLetterSwap.js" defer></script>
+    <script type="module" src="ui/puzzleSummaries.js" defer></script>
     <title>Dynamic Grid</title>
   </head>
   <body>
+<div class="side-by-side-container">
+  <div class="left-panel">
+    <h1>Puzzle Preview</h1>
     <div id="grid" class="grid-container"></div>
+  </div>
+
+  <div class="right-panel">
+    <h1>Puzzle Summaries</h1>
+    <table id="puzzleTable">
+      <thead>
+        <tr>
+          <th>Date Created</th>
+          <th>Title</th>
+          <th>Word Count</th>
+          <th>Words</th>
+          <th>Size</th>
+          <th>Density</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
   </body>
 </html>
 
