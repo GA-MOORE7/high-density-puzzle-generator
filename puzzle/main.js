@@ -8,10 +8,13 @@ import { enableLetterSwapping } from "../scrabblegram/clickLetterSwap.js";
 import { createWordsObjectFromGrid } from "../scrabblegram/wordsObject.js";
 import { assignTempColors } from "../scrabblegram/assignTempColors.js";
 import { scrambleDisplayedLetters } from "../scrabblegram/scrambleDisplayedLetters.js";
-import { sortByBest } from './wordData.js';
+import { sortByBest } from "./wordData.js";
 import { updateWordListFromInput, wordList } from "../ui/wordInputTextArea.js";
+import { createPuzzleUploader } from "../ui/puzzlePreview.js"; // ✅ NEW
 
-// Main puzzle logic
+let latestGrid = []; // ✅ Track the best grid for upload
+
+// 🧩 Main puzzle logic
 function generateBestGrid(sortedWords) {
   const rowSize = 7;
   const attempts = 1000;
@@ -77,6 +80,8 @@ function generateBestGrid(sortedWords) {
   const wordsObject = createWordsObjectFromGrid(best.grid);
   assignTempColors(wordsObject, best.grid);
   enableLetterSwapping(best.grid, wordsObject);
+
+  latestGrid = best.grid; // ✅ Save for uploading
 }
 
 // ⛳ Trigger puzzle generation from "Preview Puzzle" button
@@ -91,6 +96,8 @@ window.addEventListener("DOMContentLoaded", () => {
   updateWordListFromInput();
   const sortedWords = sortByBest(wordList);
   generateBestGrid(sortedWords);
+
+  createPuzzleUploader(() => latestGrid); // ✅ Setup upload button
 });
 
 
