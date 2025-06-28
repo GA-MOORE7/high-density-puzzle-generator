@@ -1,35 +1,43 @@
-/* Flex container to hold grid + table side by side */
+/* Flex container: wrap when not enough space */
 .side-by-side-container {
   display: flex;
-  gap: 30px;
-  align-items: flex-start;
-  justify-content: center;
   flex-wrap: wrap;
-  margin: 20px auto;           /* Centers container horizontally */
-  max-width: 1200px;           /* Controls total width */
-  padding: 0 20px;             /* Optional: ensures breathing room on smaller screens */
+  justify-content: center;
+  align-items: flex-start;
+  gap: 30px;
+  margin: 20px auto;
+  padding: 0 20px;
+  max-width: 1400px;
+  box-sizing: border-box;
 }
 
-
-/* Left panel: Puzzle preview */
-.left-panel {
-  flex: 1;
-  min-width: 350px;
-}
-
-/* Right panel: Puzzle summary table */
+/* Panels: flexibly grow and wrap */
+#word-input-panel,
+.left-panel,
 .right-panel {
-  flex: 1;
-  min-width: 350px;
+  flex: 1 1 350px;           /* grow, shrink, minimum size */
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
 }
 
+/* Headings centered */
+#word-input-panel h2,
 .left-panel h1,
 .right-panel h1 {
   text-align: center;
 }
 
+/* Responsive text area */
+#wordInput {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+}
 
-/* Grid styling */
+/* Puzzle grid container */
 .grid-container {
   display: grid;
   gap: 10px;
@@ -39,6 +47,7 @@
   padding: 10px;
 }
 
+/* Grid item styles */
 .grid-item {
   display: flex;
   align-items: center;
@@ -50,22 +59,19 @@
   font-weight: bold;
 }
 
-/* Coloring classes for game logic */
+/* Coloring classes */
 .correct-green {
   background-color: rgb(141, 201, 141);
   color: white;
 }
-
 .wrong-word-red {
   background-color: red;
   color: white;
 }
-
 .misplaced-yellow {
   background-color: goldenrod;
   color: black;
 }
-
 .potential-excess {
   background-color: lightgray;
   color: black;
@@ -88,3 +94,4 @@ th, td {
 th {
   background-color: #f4f4f4;
 }
+
