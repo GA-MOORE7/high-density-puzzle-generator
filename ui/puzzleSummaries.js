@@ -1,26 +1,30 @@
-    async function fetchPuzzles() {
-      const res = await fetch('http://localhost:3000/api/puzzles/summary');
-      const puzzles = await res.json();
+import { attachDeleteHandlers } from './deletePuzzle.js';
 
-      const tbody = document.querySelector('#puzzleTable tbody');
-      tbody.innerHTML = '';
+async function fetchPuzzles() {
+  const res = await fetch('http://localhost:3000/api/puzzles/summary');
+  const puzzles = await res.json();
 
-      puzzles.forEach(puzzle => {
-        const row = document.createElement('tr');
+  const tbody = document.querySelector('#puzzleTable tbody');
+  tbody.innerHTML = '';
 
-        const formattedDate = new Date(puzzle.createdAt).toLocaleDateString();
+  puzzles.forEach(puzzle => {
+    const row = document.createElement('tr');
+    const formattedDate = new Date(puzzle.createdAt).toLocaleDateString();
 
-        row.innerHTML = `
-          <td>${formattedDate}</td>
-          <td>${puzzle.title}</td>
-          <td>${puzzle.wordCount}</td>
-          <td>${puzzle.words.join(', ')}</td>
-          <td>${puzzle.size}</td>
-          <td>${puzzle.density}</td>
-        `;
+    row.innerHTML = `
+      <td>${formattedDate}</td>
+      <td>${puzzle.title}</td>
+      <td>${puzzle.wordCount}</td>
+      <td>${puzzle.words.join(', ')}</td>
+      <td>${puzzle.size}</td>
+      <td>${puzzle.density}</td>
+      <td><button class="delete-btn" data-id="${puzzle.id}">Delete</button></td>
+    `;
 
-        tbody.appendChild(row);
-      });
-    }
+    tbody.appendChild(row);
+  });
 
-    fetchPuzzles();
+  attachDeleteHandlers(fetchPuzzles); // 🧠 Use the imported handler
+}
+
+fetchPuzzles();
