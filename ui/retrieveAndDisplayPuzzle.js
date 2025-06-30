@@ -1,4 +1,5 @@
-// retrievePuzzle.js
+import { generateGrid } from '../puzzle/generateGrid.js';
+
 export function attachPlayHandlers() {
   document.querySelectorAll('.play-btn').forEach(button => {
     button.addEventListener('click', async () => {
@@ -14,8 +15,15 @@ export function attachPlayHandlers() {
         }
 
         const puzzleData = await res.json();
+        console.log("🧩 Retrieved puzzle:", puzzleData.grid);
 
-        console.log("🧩 Retrieved puzzle:", puzzleData);
+        // Clear any previous puzzle display
+        const playGrid = document.getElementById('play-grid');
+        playGrid.innerHTML = '';
+
+        // Generate the puzzle grid inside #play-grid
+        //generateGrid(puzzleData.grid);
+
 
       } catch (err) {
         console.error('Error fetching puzzle:', err);
@@ -24,3 +32,4 @@ export function attachPlayHandlers() {
     });
   });
 }
+

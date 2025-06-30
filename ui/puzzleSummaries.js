@@ -1,5 +1,5 @@
 import { attachDeleteHandlers } from './deletePuzzle.js';
-import { attachPlayHandlers } from './retrievePuzzle.js';
+import { attachPlayHandlers } from './retrieveAndDisplayPuzzle.js';
 
 async function fetchPuzzles() {
   const res = await fetch('http://localhost:3000/api/puzzles/summary');
