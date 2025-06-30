@@ -1,4 +1,5 @@
 import { attachDeleteHandlers } from './deletePuzzle.js';
+import { attachPlayHandlers } from './retrievePuzzle.js';
 
 async function fetchPuzzles() {
   const res = await fetch('http://localhost:3000/api/puzzles/summary');
@@ -18,13 +19,15 @@ async function fetchPuzzles() {
       <td>${puzzle.words.join(', ')}</td>
       <td>${puzzle.size}</td>
       <td>${puzzle.density}</td>
+      <td><button class="play-btn" data-id="${puzzle.id}">Let's Play</button></td>
       <td><button class="delete-btn" data-id="${puzzle.id}">Delete</button></td>
     `;
 
     tbody.appendChild(row);
   });
 
-  attachDeleteHandlers(fetchPuzzles); // 🧠 Use the imported handler
+  attachDeleteHandlers(fetchPuzzles); 
+  attachPlayHandlers(fetchPuzzles);
 }
 
 fetchPuzzles();
