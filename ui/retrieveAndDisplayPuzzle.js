@@ -20,14 +20,18 @@ export function attachPlayHandlers() {
         const puzzleData = await res.json();
         console.log("🧩 Retrieved puzzle:", puzzleData.grid);
 
-        // Clear any previous puzzle display
+        // 🟩 Show the modal
+        const modal = document.getElementById('play-modal');
+        modal.style.display = 'block';
+
+        // 🧹 Clear any previous puzzle display
         const playGrid = document.getElementById('play-grid');
         playGrid.innerHTML = '';
 
-        // Generate the puzzle grid inside #play-grid
+        // 🧩 Generate the puzzle grid inside #play-grid
         generateGrid(puzzleData.grid, 'play-grid');
 
-        // 🔁 Add interactivity:
+        // 🧠 Add interactivity
         const wordsObject = createWordsObjectFromGrid(puzzleData.grid);
         assignTempColors(wordsObject, puzzleData.grid);
         enableLetterSwapping(puzzleData.grid, wordsObject, '#play-grid');
@@ -38,5 +42,19 @@ export function attachPlayHandlers() {
       }
     });
   });
+
+  // ❌ Handle modal close (clicking the X)
+  document.querySelector('.close-button')?.addEventListener('click', () => {
+    document.getElementById('play-modal').style.display = 'none';
+  });
+
+  // ❌ Close when clicking outside the modal content
+  window.addEventListener('click', (e) => {
+    const modal = document.getElementById('play-modal');
+    if (e.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
 }
+
 
