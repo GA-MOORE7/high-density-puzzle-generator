@@ -1,4 +1,7 @@
 import { generateGrid } from '../puzzle/generateGrid.js';
+import { createWordsObjectFromGrid } from '../scrabblegram/wordsObject.js';
+import { assignTempColors } from '../scrabblegram/assignTempColors.js';
+import { enableLetterSwapping } from '../scrabblegram/clickLetterSwap.js';
 
 export function attachPlayHandlers() {
   document.querySelectorAll('.play-btn').forEach(button => {
@@ -22,8 +25,12 @@ export function attachPlayHandlers() {
         playGrid.innerHTML = '';
 
         // Generate the puzzle grid inside #play-grid
-        //generateGrid(puzzleData.grid);
+        generateGrid(puzzleData.grid, 'play-grid');
 
+        // 🔁 Add interactivity:
+        const wordsObject = createWordsObjectFromGrid(puzzleData.grid);
+        assignTempColors(wordsObject, puzzleData.grid);
+        enableLetterSwapping(puzzleData.grid, wordsObject, '#play-grid');
 
       } catch (err) {
         console.error('Error fetching puzzle:', err);

@@ -15,7 +15,7 @@
 #word-input-panel,
 .left-panel,
 .right-panel {
-  flex: 1 1 350px;           /* grow, shrink, minimum size */
+  flex: 1 1 350px;
   max-width: 100%;
   box-sizing: border-box;
   padding: 15px;
@@ -26,7 +26,8 @@
 /* Headings centered */
 #word-input-panel h2,
 .left-panel h1,
-.right-panel h1 {
+.right-panel h1,
+.bottom-panel h1 {
   text-align: center;
 }
 
@@ -37,7 +38,7 @@
   resize: vertical;
 }
 
-/* Puzzle grid container */
+/* Puzzle preview grid container */
 .grid-container {
   display: grid;
   gap: 10px;
@@ -47,16 +48,42 @@
   padding: 10px;
 }
 
-/* Grid item styles */
+/* Shared grid item styles */
 .grid-item {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: lightblue;
   border: 1px solid #000;
   padding: 20px;
   font-size: 20px;
   font-weight: bold;
+  user-select: none;
+}
+
+/* Preview grid item style */
+#grid .grid-item {
+  background-color: lightblue;
+}
+
+/* Play grid container */
+.game-grid-container {
+  display: grid;
+  gap: 10px;
+  width: fit-content;
+  margin: 30px auto;
+  border: 2px dashed #333;
+  padding: 10px;
+  background-color: #fff8f1;
+}
+
+/* Play grid distinct style */
+#play-grid .grid-item {
+  background-color: #fcead7;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+#play-grid .grid-item:hover {
+  background-color: #f5d4a9;
 }
 
 /* Coloring classes */
@@ -95,3 +122,10 @@ th {
   background-color: #f4f4f4;
 }
 
+/* Optional: bottom panel styling */
+.bottom-panel {
+  margin: 40px auto;
+  padding: 20px;
+  max-width: 1000px;
+  box-sizing: border-box;
+}

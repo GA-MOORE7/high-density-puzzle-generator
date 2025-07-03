@@ -1,8 +1,14 @@
 import { assignTempColors } from "./assignTempColors.js";
-import { mergeColors } from "./mergeColors.js";  // import your merging function
+import { mergeColors } from "./mergeColors.js";  // your merging function
 
-export function enableLetterSwapping(puzzleGrid, wordsObject) {
-  const gridItems = document.querySelectorAll('.grid-item');
+export function enableLetterSwapping(puzzleGrid, wordsObject, gridContainerSelector = '#grid') {
+  const container = document.querySelector(gridContainerSelector);
+  if (!container) {
+    console.warn('Grid container not found:', gridContainerSelector);
+    return;
+  }
+
+  const gridItems = container.querySelectorAll('.grid-item');
   let selectedGridItem = null;
 
   function parseCoords(id) {
@@ -12,41 +18,38 @@ export function enableLetterSwapping(puzzleGrid, wordsObject) {
     return { x, y };
   }
 
-function updateCellColors() {
-  gridItems.forEach(item => {
-    const { x, y } = parseCoords(item.id);
-    const cell = puzzleGrid.find(c => c.x === x && c.y === y);
+  function updateCellColors() {
+    gridItems.forEach(item => {
+      const { x, y } = parseCoords(item.id);
+      const cell = puzzleGrid.find(c => c.x === x && c.y === y);
 
-    if (!cell || !cell.displayedLetter) {
-      // No letter displayed: set to gray (empty)
-      item.style.backgroundColor = '#d0e7ff';  // or '#ccc', whichever you prefer
-      item.textContent = ''; // Clear text to be sure
-      return;
-    }
-
-    // Find all words including this cell
-    const colors = [];
-
-    for (const wordId in wordsObject) {
-      const wordEntry = wordsObject[wordId];
-      const index = wordEntry.cells.findIndex(c => c.x === x && c.y === y);
-      if (index !== -1 && wordEntry.tempColors) {
-        colors.push(wordEntry.tempColors[index]);
+      if (!cell || !cell.displayedLetter) {
+        item.style.backgroundColor = '#d0e7ff';  // empty cell color
+        item.textContent = ''; // clear text just in case
+        return;
       }
-    }
 
-    let finalColor = null; // default no color
-    if (colors.length > 0) {
-      finalColor = colors.reduce((acc, color) => mergeColors(acc, color));
-    }
+      const colors = [];
 
-    item.style.backgroundColor = finalColor === 'green' ? '#6aaa64' :
-                                finalColor === 'brown' ? '#c9b458' :
-                                finalColor === 'red' ? '#d9534f' :
-                                '#eee';  // fallback gray for no color
-  });
-}
+      for (const wordId in wordsObject) {
+        const wordEntry = wordsObject[wordId];
+        const index = wordEntry.cells.findIndex(c => c.x === x && c.y === y);
+        if (index !== -1 && wordEntry.tempColors) {
+          colors.push(wordEntry.tempColors[index]);
+        }
+      }
 
+      let finalColor = null;
+      if (colors.length > 0) {
+        finalColor = colors.reduce((acc, color) => mergeColors(acc, color));
+      }
+
+      item.style.backgroundColor = finalColor === 'green' ? '#6aaa64' :
+                                  finalColor === 'brown' ? '#c9b458' :
+                                  finalColor === 'red' ? '#d9534f' :
+                                  '#eee';  // fallback
+    });
+  }
 
   gridItems.forEach(item => {
     item.addEventListener('click', () => {

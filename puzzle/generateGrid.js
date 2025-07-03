@@ -1,9 +1,14 @@
-export function generateGrid(array) {
-  const gridContainer = document.getElementById("grid");
+export function generateGrid(array, containerId = "grid") {
+  const gridContainer = document.getElementById(containerId);
+  if (!gridContainer) {
+    console.error(`generateGrid: container with id="${containerId}" not found`);
+    return;
+  }
+
   const gridSize = Math.ceil(Math.sqrt(array.length));
   gridContainer.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
   gridContainer.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
-  gridContainer.innerHTML = "";
+  gridContainer.innerHTML = ""; // Only clears this specific grid
 
   array.forEach((cellData, index) => {
     const x = index % gridSize;
@@ -28,7 +33,6 @@ export function generateGrid(array) {
         intersectsWith ? `intersectsWith-${intersectsWith}` : null
       ].filter(Boolean);
 
-      // Use displayedLetter here for the UI display:
       cell.textContent = cellData.displayedLetter || "";
       cell.id = idParts.join(" ");
     } else {

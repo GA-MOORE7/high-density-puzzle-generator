@@ -75,7 +75,9 @@ function generateBestGrid(sortedWords) {
   console.log(`Grid density: ${best.density.toFixed(2)}`);
 
   scrambleDisplayedLetters(best.grid);
-  generateGrid(best.grid);
+
+  // <-- FIX: specify container ID for preview grid here -->
+  generateGrid(best.grid, 'grid');
 
   const wordsObject = createWordsObjectFromGrid(best.grid);
   assignTempColors(wordsObject, best.grid);
