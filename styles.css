@@ -147,14 +147,13 @@ th {
 
 .modal-content {
   background-color: #fff;
-  margin: 5rem 5rem;      /* 1rem top & bottom, 2rem left & right */
+  margin: 5rem 5rem 5rem 5rem;      /* 1rem top & bottom, 2rem left & right */
   padding: 1.5rem;
-  border-radius: 12px;
+  border-radius: 5px;
   width: auto;
   max-width: 100%;
   position: relative;
 }
-
 
 .close-button {
   position: absolute;
