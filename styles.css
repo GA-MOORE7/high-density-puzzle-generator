@@ -3,7 +3,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: flex-start;
+  align-items: stretch; /* ✅ Ensures equal height of child panels */
   gap: 30px;
   margin: 20px auto;
   padding: 0 20px;
@@ -21,6 +21,8 @@
   padding: 15px;
   background-color: #f9f9f9;
   border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Headings centered */
@@ -44,7 +46,7 @@
   gap: 10px;
   width: fit-content;
   margin: auto;
-  border: 2px solid black;
+  border: 1px dashed black;
   padding: 10px;
 }
 
@@ -71,7 +73,6 @@
   gap: 10px;
   width: fit-content;
   margin: 30px auto;
-  border: 2px dashed #333;
   padding: 10px;
   background-color: #fff8f1;
 }
@@ -129,10 +130,10 @@ th {
   padding: 20px;
   box-sizing: border-box;
   background-color: #f9f9f9;
-  /* border: 1px solid #ccc; */
+  border: 1px solid #ccc;
 }
 
-
+/* Modal styling */
 .modal {
   display: none;
   position: fixed;
@@ -147,7 +148,7 @@ th {
 
 .modal-content {
   background-color: #fff;
-  margin: 5rem 5rem 5rem 5rem;      /* 1rem top & bottom, 2rem left & right */
+  margin: 5rem;
   padding: 1.5rem;
   border-radius: 5px;
   width: auto;
@@ -163,4 +164,19 @@ th {
   font-weight: bold;
   cursor: pointer;
 }
+
+.grid-axis-label {
+  font-size: 30px;
+  background-color: #fff8f1;
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+
+
+
 

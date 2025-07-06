@@ -1,44 +1,70 @@
 export function createPuzzleUploader(getCurrentGridData) {
-  // Select the container where you want to insert uploader (inside .left-panel after #grid)
   const leftPanel = document.querySelector('.left-panel');
   const gridContainer = document.getElementById('grid');
 
-  // Create container for uploader elements
+  // Create the uploader container
   const uploaderContainer = document.createElement('div');
-  uploaderContainer.style.margin = '1em 0';
+  uploaderContainer.style.marginTop = '1.5em';
+  uploaderContainer.style.display = 'flex';
+  uploaderContainer.style.flexDirection = 'column';
+  uploaderContainer.style.alignItems = 'center'; // Center horizontally
+  uploaderContainer.style.gap = '0.75em';
 
-  // Title input
+  // Horizontal row for input + button
+  const inputRow = document.createElement('div');
+  inputRow.style.display = 'flex';
+  inputRow.style.flexDirection = 'row';
+  inputRow.style.alignItems = 'center';
+  inputRow.style.justifyContent = 'center';
+  inputRow.style.gap = '0.5em';
+  inputRow.style.flexWrap = 'wrap'; // Wrap on smaller screens
+
+  // Input field
   const titleInput = document.createElement('input');
   titleInput.type = 'text';
   titleInput.placeholder = 'Enter Puzzle Title';
-  titleInput.style.marginRight = '1em';
   titleInput.style.padding = '0.5em';
+  titleInput.style.fontSize = '1em';
+  titleInput.style.maxWidth = '300px';
   titleInput.id = 'puzzle-title';
 
   // Upload button
   const uploadButton = document.createElement('button');
   uploadButton.textContent = 'Upload Puzzle';
   uploadButton.style.padding = '0.5em 1em';
+  uploadButton.style.fontSize = '1em';
+  uploadButton.style.backgroundColor = '#4CAF50';
+  uploadButton.style.color = 'white';
+  uploadButton.style.border = 'none';
+  uploadButton.style.borderRadius = '4px';
   uploadButton.style.cursor = 'pointer';
 
-  uploaderContainer.appendChild(titleInput);
-  uploaderContainer.appendChild(uploadButton);
+  // Hover effect
+  uploadButton.addEventListener('mouseenter', () => {
+    uploadButton.style.backgroundColor = '#45a049';
+  });
+  uploadButton.addEventListener('mouseleave', () => {
+    uploadButton.style.backgroundColor = '#4CAF50';
+  });
 
-  // Insert uploaderContainer immediately after the gridContainer inside leftPanel
+  // Assemble uploader
+  inputRow.appendChild(titleInput);
+  inputRow.appendChild(uploadButton);
+  uploaderContainer.appendChild(inputRow);
+
+  // Insert uploader after grid
   if (gridContainer && leftPanel) {
     gridContainer.insertAdjacentElement('afterend', uploaderContainer);
   } else if (leftPanel) {
-    // fallback: append at end of leftPanel if #grid not found
     leftPanel.appendChild(uploaderContainer);
   } else {
-    // fallback: append to body if .left-panel missing
     document.body.appendChild(uploaderContainer);
   }
 
   // Upload logic
   uploadButton.addEventListener('click', async () => {
     const title = titleInput.value.trim();
-    const grid = getCurrentGridData(); // should return the array like in your structure
+    const grid = getCurrentGridData();
 
     if (!title) {
       alert('Please enter a puzzle title.');
@@ -51,9 +77,9 @@ export function createPuzzleUploader(getCurrentGridData) {
       const response = await fetch('http://localhost:3000/api/post', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(puzzleData)
+        body: JSON.stringify(puzzleData),
       });
 
       if (!response.ok) {
@@ -69,5 +95,6 @@ export function createPuzzleUploader(getCurrentGridData) {
     }
   });
 }
+
 
 
