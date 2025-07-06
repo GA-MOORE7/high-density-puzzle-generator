@@ -11,12 +11,14 @@ import { scrambleDisplayedLetters } from "../scrabblegram/scrambleDisplayedLette
 import { sortByBest } from "./wordData.js";
 import { updateWordListFromInput, wordList } from "../ui/wordInputTextArea.js";
 import { createPuzzleUploader } from "../ui/puzzlePreview.js"; // ✅ NEW
+import { getLongestWordLength } from "../ui/setGridSize.js";
+
 
 let latestGrid = []; // ✅ Track the best grid for upload
 
 // 🧩 Main puzzle logic
 function generateBestGrid(sortedWords) {
-  const rowSize = 7;
+  const rowSize = Math.max(getLongestWordLength(sortedWords), 7); // ensure minimum size
   const attempts = 1000;
   const totalCells = rowSize * rowSize;
   const results = [];
