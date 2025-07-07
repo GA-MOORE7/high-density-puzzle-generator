@@ -74,7 +74,7 @@
   width: fit-content;
   margin: 30px auto;
   padding: 10px;
-  background-color: #fff8f1;
+  background-color: #ffe2c6;
 }
 
 /* Play grid distinct style */
@@ -167,7 +167,7 @@ th {
 
 .grid-axis-label {
   font-size: 30px;
-  background-color: #fff8f1;
+  background-color: #ffe2c6;
   user-select: none;
   display: flex;
   justify-content: center;
