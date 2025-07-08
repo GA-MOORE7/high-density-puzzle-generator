@@ -51,18 +51,20 @@
   padding: 10px;
 }
 
-/* Shared grid item styles */
 .grid-item {
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid #000;
-  padding: 20px;
-  font-size: 40px;
-  /* font-weight: bold; */
+  width: 80px;               /* Increased from 60px to 72px */
+  aspect-ratio: 1 / 1;       /* Maintains square shape */
+  font-size: 42px;           /* Slightly larger font for balance */
   user-select: none;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
 }
+
+
 
 /* Preview grid item style */
 #grid .grid-item {
