@@ -58,8 +58,8 @@
   justify-content: center;
   border: 1px solid #000;
   padding: 20px;
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 40px;
+  /* font-weight: bold; */
   user-select: none;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -176,7 +176,8 @@ th {
 
 /* Axis label styling (if you're using row/column labels) */
 .grid-axis-label {
-  font-size: 30px;
+  font-size: 40px;
+  font-weight: bold;
   background-color: #ffe2c6;
   user-select: none;
   display: flex;
