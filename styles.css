@@ -79,12 +79,12 @@
   background-color: #ffe2c6;
 }
 
-/* Play grid hover effect (only on non-empty and non-green cells) */
-#play-grid .grid-item:hover:not(:empty):not(.correct-green) {
+#play-grid .grid-item:not(:empty):not(.correct-green-static):hover {
   background-color: #f5d4a9;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 15px 2px rgba(255, 140, 0, 0.6); /* warm glow */
   cursor: pointer;
 }
+
 
 /* Disable interaction and hover box-shadow for green cells */
 #play-grid .grid-item.correct-green {
