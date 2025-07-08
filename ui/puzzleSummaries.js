@@ -2,7 +2,7 @@ import { attachDeleteHandlers } from './deletePuzzle.js';
 import { attachPlayHandlers } from './retrieveAndDisplayPuzzle.js';
 
 async function fetchPuzzles() {
-  const res = await fetch('http://localhost:3000/api/puzzles/summary');
+  const res = await fetch('http://scrabblegrams-fox-90a0cb6e632f.herokuapp.com/api/puzzles/summary');
   const puzzles = await res.json();
 
   const tbody = document.querySelector('#puzzleTable tbody');

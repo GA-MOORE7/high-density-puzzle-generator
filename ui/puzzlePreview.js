@@ -74,7 +74,7 @@ export function createPuzzleUploader(getCurrentGridData) {
     const puzzleData = { title, grid };
 
     try {
-      const response = await fetch('http://localhost:3000/api/post', {
+      const response = await fetch('http://scrabblegrams-fox-90a0cb6e632f.herokuapp.com/api/post', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
