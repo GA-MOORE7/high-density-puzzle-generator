@@ -78,13 +78,15 @@
 }
 
 /* Play grid distinct style */
-#play-grid .grid-item {
-  background-color: #fcead7;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-#play-grid .grid-item:hover {
+/* Only highlight hover if the grid item is not empty */
+#play-grid .grid-item:hover:not(:empty) {
   background-color: #f5d4a9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* optional visual glow */
+  cursor: pointer;
+}
+
+#play-grid .grid-item {
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* Coloring classes */
@@ -173,6 +175,15 @@ th {
   justify-content: center;
   align-items: center;
 }
+
+/* Glow effect when selecting letters to swap */
+.grid-item.swapping {
+  outline: 3px solid gold;
+  box-shadow: 0 0 12px 5px gold;
+  transition: outline 0.2s ease, box-shadow 0.2s ease;
+}
+
+
 
 
 
