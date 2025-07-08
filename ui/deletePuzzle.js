@@ -5,7 +5,7 @@ export function attachDeleteHandlers(fetchPuzzles) {
       const id = button.dataset.id;
       if (confirm('Are you sure you want to delete this puzzle?')) {
         try {
-          const deleteRes = await fetch(`http://https://scrabblegrams-fox-90a0cb6e632f.herokuapp.com/api/puzzle/${id}`, {
+          const deleteRes = await fetch(`https://scrabblegrams-fox-90a0cb6e632f.herokuapp.com/api/puzzle/${id}`, {
             method: 'DELETE',
           });
 

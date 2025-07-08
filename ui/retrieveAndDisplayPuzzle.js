@@ -18,7 +18,7 @@ export function attachPlayHandlers() {
       const id = button.dataset.id;
 
       try {
-        const res = await fetch(`http://scrabblegrams-fox-90a0cb6e632f.herokuapp.com/api/puzzle/${id}`);
+        const res = await fetch(`https://scrabblegrams-fox-90a0cb6e632f.herokuapp.com/api/puzzle/${id}`);
         if (!res.ok) {
           const error = await res.json();
           alert(`Failed to load puzzle: ${error.message}`);

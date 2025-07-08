@@ -9,7 +9,7 @@ export function enableLetterSwapping(puzzleGrid, wordsObject, gridContainerSelec
   }
 
   let selectedGridItem = null;
-  const clickSound = new Audio("https://www.soundjay.com/misc/sounds/small-bell-ring-01a.mp3");
+  const clickSound = new Audio('https://www.soundjay.com/misc/sounds/small-bell-ring-01a.mp3');
 
   function parseCoords(id) {
     const parts = id.split(' ');
