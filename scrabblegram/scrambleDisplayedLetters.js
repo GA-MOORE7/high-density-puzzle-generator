@@ -3,7 +3,7 @@ export function scrambleDisplayedLetters(grid) {
 
   // Step 0: Build a mapping of word -> list of cells
   for (const cell of grid) {
-    if (cell.letter && cell.word) {
+    if (cell.word) {
       if (!wordMap.has(cell.word)) {
         wordMap.set(cell.word, []);
       }
@@ -11,14 +11,19 @@ export function scrambleDisplayedLetters(grid) {
     }
   }
 
-  // Step 0.5: Set expectedLetter to original letter
-  grid.forEach(cell => {
+grid.forEach(cell => {
+  if (cell.hasOwnProperty('letter')) {
     if (cell.letter) {
       cell.expectedLetter = cell.letter;
     } else {
       cell.expectedLetter = null;
     }
-  });
+    delete cell.letter;
+  } else {
+    cell.expectedLetter = null;
+  }
+});
+
 
   // Step 1: Swap two random letters within each word
   for (const cells of wordMap.values()) {
@@ -37,7 +42,7 @@ export function scrambleDisplayedLetters(grid) {
     }
   }
 
-  // Step 2: Cross-word letter swapping (random letter from wordA <-> wordB)
+  // Step 2: Cross-word letter swapping
   const words = Array.from(wordMap.keys());
   for (let i = 0; i < words.length - 1; i++) {
     const wordA = words[i];
@@ -52,11 +57,10 @@ export function scrambleDisplayedLetters(grid) {
     const cellA = cellsA[randA];
     const cellB = cellsB[randB];
 
-    // Swap displayedLetters
     [cellA.displayedLetter, cellB.displayedLetter] = [cellB.displayedLetter, cellA.displayedLetter];
   }
 
-  // Fill any nulls
+  // Step 3: Ensure all cells have displayedLetter populated
   grid.forEach(cell => {
     if (!cell.displayedLetter && cell.expectedLetter) {
       cell.displayedLetter = cell.expectedLetter;

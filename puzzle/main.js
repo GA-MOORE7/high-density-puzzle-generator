@@ -1,100 +1,108 @@
 import { generateGrid } from "./generateGrid.js";
 import { arrayGenerator } from "./letterArraySize.js";
 import { placeInitialWord } from "./placeInitialWord.js";
-import { words } from "./wordData.js";
 import { getGridAsObjects } from "./letterPositions.js";
 import { validIntersections } from "./validIntersections.js";
 import { placeWordAtPosition } from "./addWord.js";
 import { enableLetterSwapping } from "../scrabblegram/clickLetterSwap.js";
 import { createWordsObjectFromGrid } from "../scrabblegram/wordsObject.js";
 import { assignTempColors } from "../scrabblegram/assignTempColors.js";
-import { scrambleDisplayedLetters } from "../scrabblegram/scrambleDisplayedLetters.js"; // <-- Import scramble function
+import { scrambleDisplayedLetters } from "../scrabblegram/scrambleDisplayedLetters.js";
+import { sortByBest } from "./wordData.js";
+import { updateWordListFromInput, wordList } from "../ui/wordInputTextArea.js";
+import { createPuzzleUploader } from "../ui/puzzlePreview.js"; // ✅ NEW
+import { getLongestWordLength } from "../ui/setGridSize.js";
 
-const rowSize = 7;
-const attempts = 1000;
-const totalCells = rowSize * rowSize;
-const results = [];
 
-let initialWordIndex = 0;
+let latestGrid = []; // ✅ Track the best grid for upload
 
-for (let run = 0; run < attempts; run++) {
-  const initialWord = words[initialWordIndex];
-  
-  const letterArray = arrayGenerator(rowSize);
-  placeInitialWord(letterArray, rowSize, initialWord, true, false);
+// 🧩 Main puzzle logic
+function generateBestGrid(sortedWords) {
+  const rowSize = Math.max(getLongestWordLength(sortedWords), 7); // ensure minimum size
+  const attempts = 1000;
+  const totalCells = rowSize * rowSize;
+  const results = [];
 
-  const placedWords = new Set();
-  const wordAttempts = {};
-  placedWords.add(initialWord);
+  let initialWordIndex = 0;
 
-  for (let pass = 0; pass < 100; pass++) {
-    for (let i = 1; i < words.length; i++) {
-      const word = words[i];
-      if (placedWords.has(word)) continue;
+  for (let run = 0; run < attempts; run++) {
+    const initialWord = sortedWords[initialWordIndex];
+    const letterArray = arrayGenerator(rowSize);
+    placeInitialWord(letterArray, rowSize, initialWord, true, false);
 
-      const attempts = wordAttempts[word] || 0;
-      if (attempts >= 3) continue;
-      wordAttempts[word] = attempts + 1;
+    const placedWords = new Set();
+    const wordAttempts = {};
+    placedWords.add(initialWord);
 
-      const gridObjects = getGridAsObjects(letterArray, rowSize);
-      const validSpots = validIntersections(word, gridObjects, rowSize);
+    for (let pass = 0; pass < 100; pass++) {
+      for (let i = 1; i < sortedWords.length; i++) {
+        const word = sortedWords[i];
+        if (placedWords.has(word)) continue;
 
-      if (validSpots.length > 0) {
-        const chosenSpot = validSpots[Math.floor(Math.random() * validSpots.length)];
-        placeWordAtPosition(word, letterArray, rowSize, chosenSpot);
-        placedWords.add(word);
+        const attempts = wordAttempts[word] || 0;
+        if (attempts >= 3) continue;
+        wordAttempts[word] = attempts + 1;
+
+        const gridObjects = getGridAsObjects(letterArray, rowSize);
+        const validSpots = validIntersections(word, gridObjects, rowSize);
+
+        if (validSpots.length > 0) {
+          const chosenSpot = validSpots[Math.floor(Math.random() * validSpots.length)];
+          placeWordAtPosition(word, letterArray, rowSize, chosenSpot);
+          placedWords.add(word);
+        }
       }
     }
+
+    const filledCells = letterArray.flat().filter(cell => {
+      return typeof cell === 'object' && cell?.letter;
+    }).length;
+
+    const density = filledCells / totalCells;
+    const normalizedGrid = getGridAsObjects(letterArray, rowSize);
+
+    normalizedGrid.forEach(cell => {
+      cell.displayedLetter = cell.letter || null;
+    });
+
+    results.push({ grid: normalizedGrid, filledCells, density, run });
+    initialWordIndex = (initialWordIndex + 1) % sortedWords.length;
   }
 
-  const filledCells = letterArray.flat().filter(cell => {
-    if (typeof cell === 'object' && cell !== null) return cell.letter && cell.letter !== "";
-    return false;
-  }).length;
-  const density = filledCells / totalCells;
+  results.sort((a, b) => b.density - a.density);
+  const best = results[0];
 
-  const normalizedGrid = getGridAsObjects(letterArray, rowSize);
+  console.log(`🏆 Best Grid (Run #${best.run}):`, best.grid);
+  console.log(`Filled cells: ${best.filledCells} / ${totalCells}`);
+  console.log(`Grid density: ${best.density.toFixed(2)}`);
 
-  normalizedGrid.forEach(cell => {
-    if (cell.letter) {
-      cell.displayedLetter = cell.letter;
-    } else {
-      cell.displayedLetter = null;
-    }
-  });
+  scrambleDisplayedLetters(best.grid);
 
-  results.push({
-    grid: normalizedGrid,
-    filledCells,
-    density,
-    run
-  });
+  // <-- FIX: specify container ID for preview grid here -->
+  generateGrid(best.grid, 'grid');
 
-  initialWordIndex = (initialWordIndex + 1) % words.length;
+  const wordsObject = createWordsObjectFromGrid(best.grid);
+  assignTempColors(wordsObject, best.grid);
+  enableLetterSwapping(best.grid, wordsObject);
+
+  latestGrid = best.grid; // ✅ Save for uploading
 }
 
-results.sort((a, b) => b.density - a.density);
+// ⛳ Trigger puzzle generation from "Preview Puzzle" button
+document.getElementById("applyWordsButton").addEventListener("click", () => {
+  updateWordListFromInput();
+  const sortedWords = sortByBest(wordList);
+  generateBestGrid(sortedWords);
+});
 
-const best = results[0];
-console.log(`🏆 Best Grid (Run #${best.run}):`);
-console.log(best.grid);
-console.log(`Filled cells: ${best.filledCells} / ${totalCells}`);
-console.log(`Grid density: ${best.density.toFixed(2)}`);
+// 🟡 Automatically generate puzzle preview on first page load
+window.addEventListener("DOMContentLoaded", () => {
+  updateWordListFromInput();
+  const sortedWords = sortByBest(wordList);
+  generateBestGrid(sortedWords);
 
-// <-- SCRAMBLE displayed letters before generating grid UI
-scrambleDisplayedLetters(best.grid);
-
-generateGrid(best.grid);
-
-const wordsObject = createWordsObjectFromGrid(best.grid);
-assignTempColors(wordsObject, best.grid);
-
-console.log("📚 Words Object with tempColors:", wordsObject);
-
-enableLetterSwapping(best.grid, wordsObject);
-
-
-
+  createPuzzleUploader(() => latestGrid); // ✅ Setup upload button
+});
 
 
 

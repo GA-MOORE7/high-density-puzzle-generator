@@ -1,38 +1,198 @@
-.grid-container {
-    display: grid;
-    gap: 10px;
-    width: fit-content; 
-    margin: auto;
-    border: 2px solid black;
-    padding: 10px;
-}
-.grid-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: lightblue;
-    border: 1px solid #000;
-    padding: 20px;
-    font-size: 20px;
-    font-weight: bold;
+/* Flex container: wrap when not enough space */
+.side-by-side-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 30px;
+  margin: 20px auto;
+  padding: 0 20px;
+  max-width: 1600px;
+  box-sizing: border-box;
 }
 
+/* Panels: flexibly grow and wrap */
+#word-input-panel,
+.left-panel,
+.right-panel,
+#wordInput {
+  flex: 1 1 350px;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Headings centered */
+#word-input-panel h2,
+.left-panel h1,
+.right-panel h1,
+.bottom-panel h1 {
+  text-align: center;
+}
+
+/* Responsive text area */
+#wordInput {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+/* Puzzle preview grid container */
+.grid-container {
+  display: grid;
+  gap: 10px;
+  width: fit-content;
+  margin: auto;
+  border: 1px dashed rgb(164, 164, 164);
+  padding: 10px;
+}
+
+/* Shared grid item styles */
+.grid-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #000;
+  padding: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  user-select: none;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Preview grid item style */
+#grid .grid-item {
+  background-color: lightblue;
+}
+
+/* Play grid container */
+.game-grid-container {
+  display: grid;
+  gap: 10px;
+  width: fit-content;
+  margin: 30px auto;
+  padding: 10px;
+  background-color: #ffe2c6;
+}
+
+#play-grid .grid-item:not(:empty):not(.correct-green-static):hover {
+  background-color: #f5d4a9;
+  box-shadow: 0 0 15px 2px rgba(255, 140, 0, 0.6); /* warm glow */
+  cursor: pointer;
+}
+
+
+/* Disable interaction and hover box-shadow for green cells */
+#play-grid .grid-item.correct-green {
+  pointer-events: none;
+  cursor: default;
+  box-shadow: none; /* no box shadow */
+}
+
+#play-grid .grid-item.correct-green:hover {
+  background-color: rgb(141, 201, 141); /* fixed green background */
+  box-shadow: none; /* remove glow */
+  cursor: default;
+}
+
+/* Coloring classes */
 .correct-green {
   background-color: rgb(141, 201, 141);
   color: white;
 }
-
 .wrong-word-red {
   background-color: red;
   color: white;
 }
-
 .misplaced-yellow {
   background-color: goldenrod;
   color: black;
 }
-
 .potential-excess {
   background-color: lightgray;
   color: black;
 }
+
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+th,
+td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+  word-break: break-word;
+}
+th {
+  background-color: #f4f4f4;
+}
+
+/* Optional: bottom panel styling */
+.bottom-panel {
+  flex: 1 1 100%;
+  margin: 40px auto 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+}
+
+/* Modal styling */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+.modal-content {
+  background-color: #fff;
+  margin: 5rem;
+  padding: 1.5rem;
+  border-radius: 5px;
+  width: auto;
+  max-width: 100%;
+  position: relative;
+}
+.close-button {
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Axis label styling (if you're using row/column labels) */
+.grid-axis-label {
+  font-size: 30px;
+  background-color: #ffe2c6;
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Glow effect when selecting letters to swap */
+.grid-item.swapping {
+  outline: 3px solid gold;
+  box-shadow: 0 0 12px 5px gold;
+  transition: outline 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+
+
+
+
