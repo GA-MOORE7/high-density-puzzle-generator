@@ -8,10 +8,7 @@ export function enableLetterSwapping(puzzleGrid, wordsObject, gridContainerSelec
     return;
   }
 
-  const gridItems = container.querySelectorAll('.grid-item');
   let selectedGridItem = null;
-
-  // Create the click sound once
   const clickSound = new Audio("https://www.soundjay.com/misc/sounds/small-bell-ring-01a.mp3");
 
   function parseCoords(id) {
@@ -21,7 +18,9 @@ export function enableLetterSwapping(puzzleGrid, wordsObject, gridContainerSelec
     return { x, y };
   }
 
-  function updateCellColors() {
+  function updateCellColors(container) {
+    const gridItems = container.querySelectorAll('.grid-item');
+
     gridItems.forEach(item => {
       const { x, y } = parseCoords(item.id);
       const cell = puzzleGrid.find(c => c.x === x && c.y === y);
@@ -29,6 +28,7 @@ export function enableLetterSwapping(puzzleGrid, wordsObject, gridContainerSelec
       if (!cell || !cell.displayedLetter) {
         item.style.backgroundColor = '#d0e7ff';
         item.textContent = '';
+        item.classList.remove('correct-green-static');
         return;
       }
 
@@ -47,24 +47,38 @@ export function enableLetterSwapping(puzzleGrid, wordsObject, gridContainerSelec
         finalColor = colors.reduce((acc, color) => mergeColors(acc, color));
       }
 
+      item.classList.remove('correct-green-static');
+
       item.style.backgroundColor =
         finalColor === 'green' ? '#6aaa64' :
         finalColor === 'brown' ? '#c9b458' :
         finalColor === 'red' ? '#d9534f' :
         '#eee';
+
+      if (finalColor === 'green') {
+        if (gridContainerSelector === '#play-grid') {
+          item.classList.add('correct-green-static');
+        }
+      }
     });
   }
+
+  const gridItems = container.querySelectorAll('.grid-item');
 
   gridItems.forEach(item => {
     item.addEventListener('click', () => {
       const content = item.textContent.trim();
       if (!content) return;
 
+      if (item.classList.contains('correct-green-static')) return;
+
       if (!selectedGridItem) {
         selectedGridItem = item;
-        item.classList.add('selected', 'swapping'); // highlight first
+        item.classList.add('selected', 'swapping');
       } else if (selectedGridItem !== item) {
-        item.classList.add('swapping'); // highlight second
+        if (item.classList.contains('correct-green-static')) return;
+
+        item.classList.add('swapping');
 
         const { x: x1, y: y1 } = parseCoords(selectedGridItem.id);
         const { x: x2, y: y2 } = parseCoords(item.id);
@@ -80,46 +94,41 @@ export function enableLetterSwapping(puzzleGrid, wordsObject, gridContainerSelec
           return;
         }
 
-        // Play the click sound on a valid swap
         clickSound.currentTime = 0;
         clickSound.play();
 
         requestAnimationFrame(() => {
-          // Swap letters
+          // Swap displayed letters
           const tempLetter = cell1.displayedLetter;
           cell1.displayedLetter = cell2.displayedLetter;
           cell2.displayedLetter = tempLetter;
 
-          // Update UI text
+          // Update UI
           selectedGridItem.textContent = cell1.displayedLetter || '';
           item.textContent = cell2.displayedLetter || '';
 
-          // Recalculate coloring
+          // Recolor after swap
           assignTempColors(wordsObject, puzzleGrid);
-          updateCellColors();
+          updateCellColors(container);
 
-          // Optional callback
           if (typeof onSwap === 'function') {
             onSwap();
           }
 
-          // Clear visual state
           selectedGridItem.classList.remove('selected', 'swapping');
           item.classList.remove('swapping');
           selectedGridItem = null;
         });
       } else {
-        // Deselect if clicking the same cell again
+        // Deselect same cell
         selectedGridItem.classList.remove('selected', 'swapping');
         selectedGridItem = null;
       }
     });
   });
 
-  // Initial coloring
-  updateCellColors();
+  updateCellColors(container); // initial run
 }
-
 
 
 
