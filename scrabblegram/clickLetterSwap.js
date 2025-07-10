@@ -9,8 +9,8 @@ export function enableLetterSwapping(puzzleGrid, wordsObject, gridContainerSelec
   }
 
   let selectedGridItem = null;
-  const bellSound = new Audio('https://www.soundjay.com/misc/sounds/wind-chime-1.mp3');
-  const chimeSound = new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3'); // Use local file if blocked
+  const bellSound = new Audio('sounds/green-sound.mp3');
+  const chimeSound = new Audio('sounds/brown-orange-sound.mp3'); // Use local file if blocked
 
   function parseCoords(id) {
     const parts = id.split(' ');
