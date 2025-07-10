@@ -44,7 +44,7 @@ export function attachPlayHandlers() {
         logFormattedSwapSteps(swapSteps);
 
         let currentSwaps = 0;
-        const maxSwapsAllowed = swapCount + 10;
+        const maxSwapsAllowed = swapCount;
 
         const swapCountDisplay = document.getElementById('swap-count-display');
         if (swapCountDisplay) {
