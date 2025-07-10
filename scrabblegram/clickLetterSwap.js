@@ -9,13 +9,28 @@ export function enableLetterSwapping(puzzleGrid, wordsObject, gridContainerSelec
   }
 
   let selectedGridItem = null;
-  const clickSound = new Audio('https://www.soundjay.com/misc/sounds/small-bell-ring-01a.mp3');
+  const bellSound = new Audio('https://www.soundjay.com/misc/sounds/wind-chime-1.mp3');
+  const chimeSound = new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3'); // Use local file if blocked
 
   function parseCoords(id) {
     const parts = id.split(' ');
     const x = parseInt(parts[0].split('-')[1], 10);
     const y = parseInt(parts[1].split('-')[1], 10);
     return { x, y };
+  }
+
+  function getGreenSet() {
+    const greenSet = new Set();
+    puzzleGrid.forEach(cell => {
+      for (const wordId in wordsObject) {
+        const wordEntry = wordsObject[wordId];
+        const index = wordEntry.cells.findIndex(c => c.x === cell.x && c.y === cell.y);
+        if (index !== -1 && wordEntry.tempColors && wordEntry.tempColors[index] === 'green') {
+          greenSet.add(`${cell.x},${cell.y}`);
+        }
+      }
+    });
+    return greenSet;
   }
 
   function updateCellColors(container) {
@@ -94,8 +109,7 @@ export function enableLetterSwapping(puzzleGrid, wordsObject, gridContainerSelec
           return;
         }
 
-        clickSound.currentTime = 0;
-        clickSound.play();
+        const beforeGreen = getGreenSet();
 
         requestAnimationFrame(() => {
           // Swap displayed letters
@@ -110,6 +124,23 @@ export function enableLetterSwapping(puzzleGrid, wordsObject, gridContainerSelec
           // Recolor after swap
           assignTempColors(wordsObject, puzzleGrid);
           updateCellColors(container);
+
+          const afterGreen = getGreenSet();
+          let newGreen = false;
+          for (let coord of afterGreen) {
+            if (!beforeGreen.has(coord)) {
+              newGreen = true;
+              break;
+            }
+          }
+
+          if (newGreen) {
+            bellSound.currentTime = 0;
+            bellSound.play();
+          } else {
+            chimeSound.currentTime = 0;
+            chimeSound.play();
+          }
 
           if (typeof onSwap === 'function') {
             onSwap();
@@ -129,8 +160,6 @@ export function enableLetterSwapping(puzzleGrid, wordsObject, gridContainerSelec
 
   updateCellColors(container); // initial run
 }
-
-
 
 
 
