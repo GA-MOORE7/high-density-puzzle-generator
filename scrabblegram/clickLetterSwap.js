@@ -9,7 +9,7 @@ export function enableLetterSwapping(puzzleGrid, wordsObject, gridContainerSelec
   }
 
   let selectedGridItem = null;
-  const bellSound = new Audio('sounds/green-sound.mp3');
+  const bellSound = new Audio('sounds/green-sound-2.mp3');
   const chimeSound = new Audio('sounds/brown-orange-sound.mp3'); // Use local file if blocked
 
   function parseCoords(id) {
